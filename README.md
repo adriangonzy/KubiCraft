@@ -17,7 +17,7 @@ This will soon change as we will wrap the jar exporter in mac and windows applic
 
 We believe it's a great way to share your minecraft builds, awesome spawn points or you cute little cottage by the river :wink:
 
-Just check this examples :
+Just check these examples :
 
  [![medieval castle]
  (http://lh3.googleusercontent.com/bgNNWcFZtuixW7CfFgd1zLZqIBOs8WNsLaDfWTJH8GQf7q1G7k4Mwd8qM2BV86nSoCFi9CO4YwQh14YsDZYdsQ)]
@@ -34,6 +34,10 @@ Just check this examples :
  [![Imperial city]
  (http://lh3.googleusercontent.com/Vvih9NpcS1Wkn5Dp26KOsPMiivOOI2hxu3q8pUtt35SN11S1QeQZb6CZGhrOfVXsSbGzSCuQ7C7FNf-HzmB8XQ)]
  (https://www.kubity.com/p/HWedgC)
+
+# Contributors
+
+adrian.gonzy@gmail.com, mabillot.paul@gmail.com, olivier.pitton@gmail.com
 
 # Known Issues
 
