@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.jmc.gui.ErrorMessage">
+  <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="3584" height="85"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="10" left="10" bottom="10" right="0"/>
+    </border>
+    <children>
+      <component id="11f6e" class="javax.swing.JTextArea" binding="errorText">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <columns value="0"/>
+          <editable value="false"/>
+          <lineWrap value="true"/>
+          <rows value="0"/>
+          <wrapStyleWord value="true"/>
+        </properties>
+      </component>
+      <component id="123a6" class="javax.swing.JButton" binding="closeButton">
+        <constraints border-constraint="East"/>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <horizontalTextPosition value="4"/>
+          <text value="X"/>
+          <verticalAlignment value="0"/>
+          <verticalTextPosition value="0"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

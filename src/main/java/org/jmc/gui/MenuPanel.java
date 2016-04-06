@@ -1,0 +1,234 @@
+package org.jmc.gui;
+
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import org.jmc.util.Log;
+import org.jmc.util.UpdateCheck;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+
+/**
+ * @author paul
+ */
+public class MenuPanel {
+	MainWindow mainWindow;
+
+	//GUI
+	private JPanel panel;
+	private JButton aboutButton;
+	private JButton FAQButton;
+	private JButton myMapsButton;
+	private JPanel footerPanel;
+	private JPanel contentPanel;
+	private JPanel updatePanel;
+	private JButton updateButton;
+	private JLabel updateLabel;
+
+	public MenuPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+		$$$setupUI$$$();
+		init();
+		showMaps();
+	}
+
+	public void init() {
+
+		//Buttons
+		myMapsButton.setText("My Maps");
+		myMapsButton.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		myMapsButton.setForeground(CustomPalette.GREEN);
+		myMapsButton.setBorder(BorderFactory.createEmptyBorder());
+		myMapsButton.setEnabled(false);
+
+		FAQButton.setText("FAQ");
+		FAQButton.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		FAQButton.setBorder(BorderFactory.createEmptyBorder());
+
+		aboutButton.setText("About");
+		aboutButton.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		aboutButton.setBorder(BorderFactory.createEmptyBorder());
+
+		//Panels
+		panel.setBackground(CustomPalette.DARK_BLUE);
+
+		Border matte = BorderFactory.createMatteBorder(1, -1, -1, -1, new Color(0, true));
+		Border dash = BorderFactory.createDashedBorder(Color.WHITE, 2, 2);
+		footerPanel.setBorder(BorderFactory.createCompoundBorder(matte, dash));
+
+		aboutButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				aboutButton.setForeground(CustomPalette.FLASHY_GREEN);
+				FAQButton.setForeground(CustomPalette.FORE_GROUND);
+				myMapsButton.setForeground(CustomPalette.FORE_GROUND);
+
+				aboutButton.setEnabled(false);
+				FAQButton.setEnabled(true);
+				myMapsButton.setEnabled(true);
+
+				showAbout();
+			}
+		});
+		FAQButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				aboutButton.setForeground(CustomPalette.FORE_GROUND);
+				FAQButton.setForeground(CustomPalette.FLASHY_GREEN);
+				myMapsButton.setForeground(CustomPalette.FORE_GROUND);
+
+				aboutButton.setEnabled(true);
+				FAQButton.setEnabled(false);
+				myMapsButton.setEnabled(true);
+
+				showFAQ();
+			}
+		});
+		myMapsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				aboutButton.setForeground(CustomPalette.FORE_GROUND);
+				FAQButton.setForeground(CustomPalette.FORE_GROUND);
+				myMapsButton.setForeground(CustomPalette.FLASHY_GREEN);
+
+				aboutButton.setEnabled(true);
+				FAQButton.setEnabled(true);
+				myMapsButton.setEnabled(false);
+
+				showMaps();
+			}
+		});
+
+		updatePanel.setVisible(false);
+
+		if (UpdateCheck.isNewVersionAvailable()) {
+			showUpdatePanel();
+		}
+	}
+
+	private void showUpdatePanel() {
+
+		updatePanel.setVisible(true);
+
+		updatePanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		updatePanel.setBackground(CustomPalette.BLUE_GRAY);
+
+		updateLabel.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		updateLabel.setText("New Version of the KubiCraft Exporter is available !");
+		updateLabel.setForeground(Color.ORANGE);
+
+		updateButton.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		updateButton.setText("Download New Version");
+		updateButton.setForeground(CustomPalette.FLASHY_GREEN);
+		updateButton.setFocusPainted(false);
+
+		updateButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!Desktop.isDesktopSupported()) {
+					return;
+				}
+				Desktop desktop = Desktop.getDesktop();
+				if (!desktop.isSupported(Desktop.Action.BROWSE)) {
+					return;
+				}
+				try {
+					desktop.browse(URI.create(UpdateCheck.NEW_VERSION_DOWNLOAD_LINK));
+				} catch (IOException e1) {
+					return;
+				}
+			}
+		});
+	}
+
+	public void showAbout() {
+		contentPanel.removeAll();
+		AboutPanel aboutPanel = new AboutPanel();
+		contentPanel.add(aboutPanel.getPanel());
+		contentPanel.validate();
+		contentPanel.repaint();
+	}
+
+	public void showFAQ() {
+		contentPanel.removeAll();
+		FAQPanel faqPanel = new FAQPanel();
+		contentPanel.add(faqPanel.getPanel());
+		contentPanel.validate();
+		contentPanel.repaint();
+	}
+
+	public void showMaps() {
+		contentPanel.removeAll();
+		MapsPanel maps = new MapsPanel(this.mainWindow);
+		contentPanel.add(maps.getPanel());
+		contentPanel.validate();
+		contentPanel.repaint();
+	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	/**
+	 * Method generated by IntelliJ IDEA GUI Designer
+	 * >>> IMPORTANT!! <<<
+	 * DO NOT edit this method OR call it in your code!
+	 *
+	 * @noinspection ALL
+	 */
+	private void $$$setupUI$$$() {
+		panel = new JPanel();
+		panel.setLayout(new GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
+		panel.setEnabled(true);
+		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(60, 30, 10, 30), null));
+		footerPanel = new JPanel();
+		footerPanel.setLayout(new GridLayoutManager(1, 5, new Insets(10, 0, 0, 0), -1, -1));
+		panel.add(footerPanel, new GridConstraints(4, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		aboutButton = new JButton();
+		aboutButton.setText("About");
+		footerPanel.add(aboutButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final Spacer spacer1 = new Spacer();
+		footerPanel.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		FAQButton = new JButton();
+		FAQButton.setText("FAQ");
+		footerPanel.add(FAQButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		myMapsButton = new JButton();
+		myMapsButton.setText("My Maps");
+		footerPanel.add(myMapsButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final Spacer spacer2 = new Spacer();
+		footerPanel.add(spacer2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, 1, new Dimension(20, -1), null, null, 0, false));
+		contentPanel = new JPanel();
+		contentPanel.setLayout(new BorderLayout(0, 0));
+		panel.add(contentPanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		updatePanel = new JPanel();
+		updatePanel.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+		panel.add(updatePanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		updateLabel = new JLabel();
+		updateLabel.setText("Label");
+		updatePanel.add(updateLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		updateButton = new JButton();
+		updateButton.setText("Button");
+		updatePanel.add(updateButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel1 = new JPanel();
+		panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel.add(panel1, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 1, false));
+		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), null));
+		final JPanel panel2 = new JPanel();
+		panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel.add(panel2, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 1, false));
+		panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), null));
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
+	public JComponent $$$getRootComponent$$$() {
+		return panel;
+	}
+}
