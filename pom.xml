@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.kubity</groupId>
-	<artifactId>minecraft</artifactId>
+	<artifactId>kubicraft</artifactId>
 	<version>0.0.1-beta1</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
@@ -39,6 +39,13 @@
 			<email>olivier.pitton@kubity.com</email>
 		</developer>
 	</developers>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>pentaho-releases</id>
+			<url>http://repository.pentaho.org/artifactory/repo/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<dependencies>
 		<dependency>
@@ -151,7 +158,95 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<taskdef name="bundleapp"
+										 classname="com.oracle.appbundler.AppBundlerTask"
+										 classpathref="maven.plugin.classpath" />
+								<bundleapp outputdirectory="${project.build.directory}"
+										   name="${project.name}"
+										   displayname="${project.name}"
+										   icon="${project.build.directory}/classes/conf/ui/${project.name}_icon.icns"
+										   identifier="${project.groupId}"
+										   shortversion="${project.version}"
+										   copyright="${project.organization.name}"
+										   mainclassname="org.jmc.Main">
+
+									<runtime dir="src/main/bundle_resources/jre_1_7_macos/Contents/Home" />
+									<classpath file="${project.build.directory}/${project.name}.jar" />
+
+									<option value="-Xdock:name=${project.name}"/>
+									<option value="-Dapple.laf.useScreenMenuBar=true"/>
+									<option value="-Dcom.apple.macos.use-file-dialog-packages=true"/>
+									<option value="-Dcom.apple.macos.useScreenMenuBar=true"/>
+									<option value="-Dcom.apple.mrj.application.apple.menu.about.name=${project.name}"/>
+									<option value="-Dcom.apple.smallTabs=true"/>
+									<option value="-Dfile.encoding=UTF-8"/>
+									<option value="-Duser.dir=$APP_ROOT"/>
+
+									<option value="-splash:$APP_ROOT/Contents/Resources/splashscreen.png"/>
+
+									<option value="-Xms512M" />
+
+								</bundleapp>
+								<copy file="${project.build.directory}/classes/conf/ui/splashscreen.png"
+									  tofile="${project.build.directory}/${project.name}.app/Contents/Resources/splashscreen.png"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<!-- we should check this https://bitbucket.org/infinitekind/appbundler/overview -->
+				<!-- unfortunately there is no repo ... and it uses mercurial but nontheless this fork has more options and surely better support -->
+				<!-- this must be built on jenkins so it has to work on linux machines -->
+				<!-- also check this article https://lithomobilus.com/building-the-mac-app/ -->
+				<dependencies>
+					<dependency>
+						<groupId>com.oracle</groupId>
+						<artifactId>appbundler</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>l4j-gui</id>
+						<phase>package</phase>
+						<goals><goal>launch4j</goal></goals>
+						<configuration>
+							<dontWrapJar>false</dontWrapJar>
+							<headerType>gui</headerType>
+							<jar>${project.build.directory}/${project.name}.jar</jar>
+							<outfile>${project.build.directory}/${project.name}.exe</outfile>
+							<chdir>.</chdir>
+							<priority>normal</priority>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<stayAlive>false</stayAlive>
+							<restartOnCrash>false</restartOnCrash>
+							<icon>${project.build.directory}/classes/conf/ui/${project.name}_icon.ico</icon>
+							<jre>
+								<bundledJre64Bit>false</bundledJre64Bit>
+								<bundledJreAsFallback>false</bundledJreAsFallback>
+								<minVersion>1.7.0</minVersion>
+								<jdkPreference>preferJre</jdkPreference>
+								<runtimeBits>64/32</runtimeBits>
+							</jre>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
