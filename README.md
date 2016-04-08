@@ -7,7 +7,7 @@ However we really want to simplify the usage experience and auto-export to Kubit
 
 # BETA Download Links
 
-### [Mac](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.zip) - No requirements
+### [Mac](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.dmg) - No requirements
 ### [Windows](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.exe) - The only requirement for running the exporter is having java 7 installed.
 ### [Jar](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar) - The only requirement for running the exporter is having java 7 installed.
 
