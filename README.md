@@ -3,8 +3,6 @@
 This project is based on the awesome [jmc2obj](https://github.com/jmc2obj/j-mc-2-obj) exporter.
 However we really want to simplify the usage experience and auto-export to Kubity.
 
-### [DOWNLOAD BETA HERE](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar)
-
 # BETA Download Links
 
 ### [OSX](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.dmg)
