@@ -64,7 +64,7 @@ public class Options
 	/**
 	 * True if debug mode
 	 */
-	public static boolean debug = false;
+	public static boolean debug = true;
 	
 	/**
 	 * How many threads to use when exporting.

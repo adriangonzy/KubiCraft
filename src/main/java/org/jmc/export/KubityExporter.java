@@ -112,10 +112,6 @@ public class KubityExporter {
 	}
 
 	private static CloseableHttpClient createClient() {
-		if (Options.debug) {
-			return HttpClientBuilder.create().build();
-		}
-
 		TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
 			public X509Certificate[] getAcceptedIssuers(){return null;}
 			public void checkClientTrusted(X509Certificate[] certs, String authType){}
