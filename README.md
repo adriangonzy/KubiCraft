@@ -5,11 +5,11 @@ However we really want to simplify the usage experience and auto-export to Kubit
 
 # BETA Download Links
 
-### [OSX](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.dmg)
+### [OSX](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.dmg?version=0.0.0-beta1)
 No requirements
-### [Windows](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.exe)
+### [Windows](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.exe?version=0.0.0-beta1)
 The only requirement for running the exporter is having java 7 installed.
-### [Jar](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar)
+### [Jar](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar?version=0.0.0-beta1)
 The only requirement for running the exporter is having java 7 installed.
 
 ### [Java 7 Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
