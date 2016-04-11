@@ -16,7 +16,6 @@ import org.jmc.world.Region;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +31,13 @@ public class ObjExporter {
 
 	public static void export(MapInfo mapInfo, ProgressCallback progress, KubityExporter.ErrorCallback errorCallback) {
 
-		File exportFile = new File(Options.outputDir, mapInfo.path.toFile().getName() + ".zip");
+		// hack for mac bundled .app
+		String property = System.getProperty("user.dir");
+		if (property != null && property.endsWith(".app")) {
+			Options.outputDir = new File(property.substring(0, property.length() - "kubicraft.app".length()));
+		}
 
+		File exportFile = new File(Options.outputDir, mapInfo.path.toFile().getName() + ".zip");
 		ZipOutputStream exportOutputStream;
 
 		try {

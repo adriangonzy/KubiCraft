@@ -3,15 +3,16 @@
 This project is based on the awesome [jmc2obj](https://github.com/jmc2obj/j-mc-2-obj) exporter.
 However we really want to simplify the usage experience and auto-export to Kubity.
 
-### [DOWNLOAD BETA HERE](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar)
+# BETA Download Links
 
-# Requirements
-
+### [OSX](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.dmg?version=0.0.0-beta1)
+No requirements
+### [Windows](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.exe?version=0.0.0-beta1)
+The only requirement for running the exporter is having java 7 installed.
+### [Jar](http://storage.googleapis.com/kubity-software-factory/minecraft/latest/kubicraft.jar?version=0.0.0-beta1)
 The only requirement for running the exporter is having java 7 installed.
 
 ### [Java 7 Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
-
-This will soon change as we will wrap the jar exporter in mac and windows applications.
 
 # Why Kubity ?
 

@@ -1,6 +1,7 @@
 package org.jmc.util;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,7 +34,7 @@ public class Resources {
 		// load texture paths by name
 		final Map<String, String> textures = new HashMap<>();
 
-		final File jarFile = new File(Resources.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+		final File jarFile = new File(URLDecoder.decode(Resources.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8"));
 		if (jarFile.isFile()) {
 			final JarFile jar = new JarFile(jarFile);
 			final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
