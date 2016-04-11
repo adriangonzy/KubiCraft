@@ -108,12 +108,12 @@ public class Region implements Iterable<Chunk> {
 		rz = chunk_z >> 5;
 
 		String mcaFileName = "r." + rx + "." + rz + ".mca";
-		Region region = regionsCache.get(mapInfo.path.toAbsolutePath()+mcaFileName);
+		Region region = regionsCache.get(mapInfo.path.toAbsolutePath()+mapInfo.dimension.getName()+mcaFileName);
 		if (region != null) {
 			return region;
 		}
 		String mcrFileName = "r."+rx+"."+rz+".mcr";
-		region = regionsCache.get(mapInfo.path.toAbsolutePath()+mcrFileName);
+		region = regionsCache.get(mapInfo.path.toAbsolutePath()+mapInfo.dimension.getName()+mcrFileName);
 		if (region != null) {
 			return region;
 		}
@@ -129,7 +129,7 @@ public class Region implements Iterable<Chunk> {
 			file= new File(dir, "/" + mcrFileName);
 
 		region = new Region(file);
-		regionsCache.put(mapInfo.path.toAbsolutePath().toString()+file.getName(), region);
+		regionsCache.put(mapInfo.path.toAbsolutePath().toString()+mapInfo.dimension.getName()+file.getName(), region);
 		return region;
 	}
 
@@ -158,7 +158,7 @@ public class Region implements Iterable<Chunk> {
 			if(name.matches(REGION_FILE_REGEX))
 			{
 				Region region = new Region(f);
-				regionsCache.put(f.getName(), region);
+				regionsCache.put(mapInfo.path.toAbsolutePath().toString()+mapInfo.dimension.getName()+f.getName(), region);
 				ret.add(region);
 			}
 		}
