@@ -158,7 +158,7 @@ public class Region implements Iterable<Chunk> {
 			if(name.matches(REGION_FILE_REGEX))
 			{
 				Region region = new Region(f);
-				regionsCache.put(f.getName(), region);
+				regionsCache.put(mapInfo.path.toAbsolutePath().toString()+mapInfo.dimension.getName()+f.getName(), region);
 				ret.add(region);
 			}
 		}
