@@ -62,9 +62,8 @@ a {
 .page-header {
   color: #fff;
   text-align: center;
-  background-color: #159957;
-  background-image: url("../assets/mc_wallpaper.jpg");
-  background-position: center;
+  background: #159957 url("../assets/mc_wallpaper.jpg") top;
+  background-size: cover;
 }
 
 @media screen and (min-width: 64em) {
