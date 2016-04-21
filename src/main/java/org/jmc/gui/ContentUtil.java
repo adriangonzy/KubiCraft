@@ -40,7 +40,7 @@ public class ContentUtil {
                     "The project is open-source so just go check the code at https://github.com/adriangonzy/KubiCraft",
 
             "But what is Kubity and why we should use it ?",
-                    "We believe it's a great way to share your minecraft builds, awesome spawn points or you cute little cottage by the river ;)\n\n" +
+                    "We believe it's a great way to share your minecraft builds, awesome spawn points or your cute little cottage by the river ;)\n\n" +
                     "Anyone will be able to freely walk on the terrain you exported and feel like in the game directly from their browsers and mobile phones.\n\n" +
                     "For even more awesomeness, Kubity mobile Apps will let you rediscover your exports in Virtual Reality !!",
 
