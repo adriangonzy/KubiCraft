@@ -1,4 +1,4 @@
-# KubiCraft - Minecraft Exporter for Kubity
+# [KubiCraft - Minecraft Exporter for Kubity](http://adriangonzy.github.io/KubiCraft/)
 
 This project is based on the awesome [jmc2obj](https://github.com/jmc2obj/j-mc-2-obj) exporter.
 However we really want to simplify the usage experience and auto-export to Kubity.
