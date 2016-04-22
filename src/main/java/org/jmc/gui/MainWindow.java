@@ -12,12 +12,15 @@ import org.jmc.config.BlockTypes;
 import org.jmc.config.EntityTypes;
 import org.jmc.config.Materials;
 import org.jmc.export.KubityExporter;
+import org.jmc.util.IOUtil;
 import org.jmc.util.Log;
+import org.jmc.util.Resources;
 import org.jmc.world.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Dimension;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -73,8 +76,14 @@ public class MainWindow extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("KubiCraft - " + KubityExporter.VERSION);
 		setLocationRelativeTo(null);
-		Image image = new ImageIcon(Paths.get("conf", "ui", "kubicraft.png").toString()).getImage();
-		setIconImage(image);
+		try {
+			byte[] imageContent = IOUtil.toByteArray(Resources.load("/conf/ui/kubicraft.png"));
+			Image image = new ImageIcon(imageContent).getImage();
+			setIconImage(image);
+		} catch (IOException e) {
+			log("We can't load the favicon", false);
+		}
+
 
 		main = new JPanel(new BorderLayout());
 		menu = new MenuPanel(this);
