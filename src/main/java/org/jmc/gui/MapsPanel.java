@@ -286,12 +286,15 @@ public class MapsPanel {
 		scrollMap.setVerticalScrollBarPolicy(20);
 		mapsContainer.add(scrollMap, BorderLayout.CENTER);
 		scrollMap.setViewportView(maps);
+		helpFooter = new JPanel();
+		helpFooter.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		mapsPanel.add(helpFooter, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		final JPanel panel1 = new JPanel();
-		panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-		mapsPanel.add(panel1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel1.setLayout(new GridLayoutManager(1, 2, new Insets(30, 0, 0, 0), -1, -1));
+		helpFooter.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		titleLabel2 = new JLabel();
 		titleLabel2.setHorizontalAlignment(10);
-		titleLabel2.setText("... Or look for your own maps ");
+		titleLabel2.setText("Or look for your own maps ");
 		panel1.add(titleLabel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(163, 16), null, 0, false));
 		hereButton = new JButton();
 		hereButton.setHorizontalAlignment(0);
