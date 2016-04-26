@@ -68,7 +68,7 @@ public class ObjExporter {
 				return;
 			}
 
-			addTexturesToZip(exportOutputStream);
+			addTexturesToZip(mapInfo, exportOutputStream);
 			addMTLToZip(exportOutputStream);
 			exportOutputStream.close();
 
@@ -87,7 +87,7 @@ public class ObjExporter {
 			Log.info("Done!");
 		} catch (Exception e) {
 			Log.error("Error while exporting OBJ:", e);
-			errorCallback.handleError("Error while exporting OBJ");
+			errorCallback.handleError("Error while exporting OBJ: " + e.getMessage());
 			deleteFiles(exportFile);
 		}
 	}
@@ -201,8 +201,8 @@ public class ObjExporter {
 		}
 	}
 
-	private static void addTexturesToZip(ZipOutputStream out) throws IOException {
-		Iterator<Map.Entry<String, InputStream>> textureIterator = Resources.loadTextures();
+	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out) throws IOException {
+		Iterator<Map.Entry<String, InputStream>> textureIterator = TextureExporter.loadTextures(mapInfo.texturePath);
 		while (textureIterator.hasNext()) {
 			Map.Entry<String, InputStream> tex = textureIterator.next();
 			out.putNextEntry(new ZipEntry("tex/" + tex.getKey()));

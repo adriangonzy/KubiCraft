@@ -2,6 +2,7 @@ package org.jmc.gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import org.jmc.export.TextureExporter;
 import org.jmc.util.Filesystem;
 import org.jmc.util.Messages;
 import org.jmc.world.MapInfo;
@@ -10,6 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 /**
@@ -24,7 +30,10 @@ public class ToolBar {
 	private JPanel selectorDimension;
 	private JLabel nameLabel;
 	private JPanel centerPanel;
+	private JButton textureDefaultButton;
 
+
+	private static File selectionTextureFolder;
 	private final MapInfo mapInfo;
 
 	{
@@ -95,6 +104,9 @@ public class ToolBar {
 		return toolbarPanel;
 	}
 
+	private void createUIComponents() {
+	}
+
 	public interface ToolbarHandler {
 		void back();
 
@@ -130,12 +142,57 @@ public class ToolBar {
 		bExport.setForeground(CustomPalette.MAGENTA);
 		bExport.setToolTipText(Messages.getString("PreviewWindow.EXPORTING_DISABLED_WHILE_NO_SELECTION"));
 
+		textureDefaultButton.setFont(CustomFont.minecraft);
+		textureDefaultButton.setOpaque(true);
+		textureDefaultButton.setFocusPainted(false);
+		textureDefaultButton.setBorderPainted(false);
+
 		disableBExport(PreviewWindow.isExporting);
 
 		bBack.addActionListener(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				delegate.back();
+			}
+		});
+		textureDefaultButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("Duplicates")
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final JFileChooser fileChooser = new JFileChooser() {
+
+					@Override
+					public void approveSelection() {
+						File selectedFile = getSelectedFile();
+						if (selectedFile.isFile() && !Filesystem.zipFilter.accept(selectedFile)) {
+							return;
+						}
+						super.approveSelection();
+					}
+
+				};
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+				if (selectionTextureFolder != null) {
+					fileChooser.setCurrentDirectory(selectionTextureFolder);
+				}
+
+				if (fileChooser.showDialog(ToolBar.this.getToolbarPanel(),
+						Messages.getString("MainPanel.CHOOSE_FOLDER")) == JFileChooser.APPROVE_OPTION) {
+
+					File selectedMapFolder = fileChooser.getSelectedFile();
+					if (TextureExporter.isTextureRepertory(selectedMapFolder)) {
+						selectionTextureFolder = selectedMapFolder.getParentFile();
+						String path = selectedMapFolder.getAbsolutePath();
+						mapInfo.texturePath = selectedMapFolder.getPath();
+
+						//test if good texture
+						Path p = Paths.get(path);
+						textureDefaultButton.setText("Texture: " + p.getFileName().toString());
+					} else {
+						System.out.println("This is not a correct texture folder !");
+					}
+				}
 			}
 		});
 	}
