@@ -231,8 +231,7 @@ public class WriterRunnable implements Runnable {
 			for (int i = 0; i < verts.length; i++)
 			{
 				// add vertices
-				Vertex vert;
-				vert = verts[i];
+				Vertex vert = verts[i];
 
 				if (vertexMap.containsKey(vert))
 				{

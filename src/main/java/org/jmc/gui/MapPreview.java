@@ -7,9 +7,7 @@
  ******************************************************************************/
 package org.jmc.gui;
 
-import org.jmc.Options;
-import org.jmc.world.*;
-import org.jmc.world.Dimension;
+import org.jmc.world.MapInfo;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -74,8 +72,9 @@ public class MapPreview extends MapThumbnail implements MouseMotionListener, Mou
 	private float gui_bg_alpha;
 
 	public interface SelectionListener {
-		void onSelectedArea();
-		void onUnselectedArea();
+		void onAreaSelected();
+		void onAreaUnselected();
+		void onSelectionUpdate(MapInfo.SelectionBounds selectionBounds);
 	}
 
 	SelectionListener selectionListener;
@@ -98,23 +97,10 @@ public class MapPreview extends MapThumbnail implements MouseMotionListener, Mou
 	public void updateSelectionOptions() {
 		Rectangle rect = getSelectionBounds();
 		if (rect.width == 0 || rect.height == 0) {
-			Options.minX = 0;
-			Options.maxX = 0;
-			Options.minZ = 0;
-			Options.maxZ = 0;
-
-			Options.minY = -1;
-			Options.maxY = -1;
+			selectionListener.onSelectionUpdate(new MapInfo.SelectionBounds(0, -1, 0, 0, -1, 0));
 		} else {
-			Options.minX = rect.x;
-			Options.maxX = rect.x + rect.width;
-			Options.minZ = rect.y;
-			Options.maxZ = rect.y + rect.height;
-
-			Options.minY = 0;
-			Options.maxY = 256;
+			selectionListener.onSelectionUpdate(new MapInfo.SelectionBounds(rect.x, 0, rect.y, rect.x + rect.width, 256, rect.y + rect.height));
 		}
-
 	}
 
 	/**
@@ -356,9 +342,9 @@ public class MapPreview extends MapThumbnail implements MouseMotionListener, Mou
 		}
 
 		if(selection_start_x - selection_end_x != 0 && selection_start_z - selection_end_z != 0){
-			selectionListener.onSelectedArea();
+			selectionListener.onAreaSelected();
 		} else {
-			selectionListener.onUnselectedArea();
+			selectionListener.onAreaUnselected();
 		}
 
 		selecting_area=false;
