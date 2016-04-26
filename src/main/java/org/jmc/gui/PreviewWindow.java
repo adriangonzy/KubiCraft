@@ -9,6 +9,7 @@ package org.jmc.gui;
 
 import org.jmc.NBT.TAG_Double;
 import org.jmc.NBT.TAG_List;
+import org.jmc.Options;
 import org.jmc.export.KubityExporter;
 import org.jmc.export.ObjExporter;
 import org.jmc.export.ProgressCallback;
@@ -75,7 +76,7 @@ public class PreviewWindow extends JPanel {
 
 			@Override
 			public void changeDimension(MapInfo mapInfo) {
-				reloadPreview(mapInfo);
+				update(mapInfo);
 			}
 		});
 		add(pToolbar.getToolbarPanel(), BorderLayout.NORTH);
@@ -86,10 +87,12 @@ public class PreviewWindow extends JPanel {
 		repaint();
 	}
 
+	MapInfo.SelectionBounds bounds;
+
 	private void initPreview() {
 		preview = new MapPreview(new MapPreview.SelectionListener() {
 			@Override
-			public void onSelectedArea() {
+			public void onAreaSelected() {
 				if (isExporting){
 					return;
 				}
@@ -97,8 +100,13 @@ public class PreviewWindow extends JPanel {
 			}
 
 			@Override
-			public void onUnselectedArea() {
+			public void onAreaUnselected() {
 				pToolbar.disableBExport(isExporting);
+			}
+
+			@Override
+			public void onSelectionUpdate(MapInfo.SelectionBounds selectionBounds) {
+				PreviewWindow.this.bounds = selectionBounds;
 			}
 		});
 		preview.setBackground(CustomPalette.BACK_GROUND);
@@ -142,7 +150,7 @@ public class PreviewWindow extends JPanel {
 
 		int player_x = 0;
 		int player_z = 0;
-		Dimension dimension = null;
+		Dimension dimension;
 
 		LevelDat levelDat = new LevelDat(mapInfo.path.toFile());
 		if (levelDat.open()) {
@@ -188,6 +196,8 @@ public class PreviewWindow extends JPanel {
 	public void startExport(final MapInfo mapInfo) {
 		isExporting = true;
 		pToolbar.disableBExport(isExporting);
+
+		mapInfo.bounds = this.bounds;
 
 		Thread export = new Thread(new Runnable() {
 			@Override

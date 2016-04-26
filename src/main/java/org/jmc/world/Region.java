@@ -108,28 +108,23 @@ public class Region implements Iterable<Chunk> {
 		rz = chunk_z >> 5;
 
 		String mcaFileName = "r." + rx + "." + rz + ".mca";
-		Region region = regionsCache.get(mapInfo.path.toAbsolutePath()+mapInfo.dimension.getName()+mcaFileName);
-		if (region != null) {
-			return region;
-		}
-		String mcrFileName = "r."+rx+"."+rz+".mcr";
-		region = regionsCache.get(mapInfo.path.toAbsolutePath()+mapInfo.dimension.getName()+mcrFileName);
+		String regCacheKey = mapInfo.path.toAbsolutePath() + "_" + mapInfo.dimension.getName() + "_" + mcaFileName;
+
+		Region region = regionsCache.get(regCacheKey);
 		if (region != null) {
 			return region;
 		}
 
-		File dir;
+
+		File regionFile;
 		if(mapInfo.dimension == Dimension.OVERWORLD)
-			dir=new File(mapInfo.path.toAbsolutePath().toString(), "region");
+			regionFile = Paths.get(mapInfo.path.toAbsolutePath().toString(), "region", mcaFileName).toFile();
 		else
-			dir=new File(mapInfo.path.toAbsolutePath().toString(), "DIM"+mapInfo.dimension.getIndex()+"/region");
-		
-		File file= new File(dir, "/" + mcaFileName);
-		if(!file.exists())
-			file= new File(dir, "/" + mcrFileName);
+			regionFile = Paths.get(mapInfo.path.toAbsolutePath().toString(), "DIM" + mapInfo.dimension.getIndex(), "region", mcaFileName).toFile();
 
-		region = new Region(file);
-		regionsCache.put(mapInfo.path.toAbsolutePath().toString()+mapInfo.dimension.getName()+file.getName(), region);
+		region = new Region(regionFile);
+		regionsCache.put(regCacheKey, region);
+
 		return region;
 	}
 

@@ -1,12 +1,10 @@
 package org.jmc.threading;
 
-import java.awt.Point;
-import java.util.ArrayList;
+import org.jmc.geom.FaceUtils.Face;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
-import org.jmc.geom.FaceUtils.Face;
 
 public class ThreadOutputQueue {
 
