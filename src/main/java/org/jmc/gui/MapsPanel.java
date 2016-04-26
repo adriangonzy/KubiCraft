@@ -45,6 +45,7 @@ public class MapsPanel {
 	private JPanel mapsContainer;
 	private JScrollPane scrollMap;
 	private JPanel maps;
+	private JPanel helpFooter;
 
 	private static File selectionMapsFolder;
 	private static Component[] mapsSave = new Component[0];
@@ -76,8 +77,8 @@ public class MapsPanel {
 
 	public MapsPanel init() {
 		//Titles and text
-		titleLabel1.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 25));
-		titleLabel2.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 25));
+		titleLabel1.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
+		titleLabel2.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
 
 		hereButton.setText("Here");
 		hereButton.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
@@ -159,11 +160,13 @@ public class MapsPanel {
 	private void addMaps() {
 		final java.util.List<Path> map = Filesystem.getMinecraftMaps();
 
-		JButton titleButton;
 		if (map.size() == 0) {
-			initNoSavesFoundFallback();
-			return;
+			this.titleLabel1.setText("- No saves founds -");
 		}
+
+		JButton titleButton;
+		initNoSavesFoundFallback();
+
 		for (final Path p : map) {
 			JPanel mapItem = new JPanel();
 
@@ -197,34 +200,42 @@ public class MapsPanel {
 	}
 
 	public void initNoSavesFoundFallback() {
-		this.titleLabel1.setText("- No saves founds -");
 
 		JPanel mapDownloads = new JPanel();
-		JLabel explain = new JLabel("Look for cool maps in any of this websites and Have fun !");
+		JLabel explain = new JLabel("Find cool maps in any of this websites");
 		explain.setFont(new Font(CustomFont.minecraft.getName(), Font.PLAIN, 20));
 		explain.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-		explain.setForeground(CustomPalette.GREEN);
+		explain.setForeground(CustomPalette.FORE_GROUND);
 
 		mapDownloads.setLayout(new BoxLayout(mapDownloads, BoxLayout.Y_AXIS));
 		mapDownloads.add(explain);
-		mapDownloads.add(Box.createRigidArea(new Dimension(1, 30)));
-		mapDownloads.add(newDownloadLink("Planet Minecraft", "http://www.planetminecraft.com/resources/projects/any/?share=world_link"));
-		mapDownloads.add(Box.createRigidArea(new Dimension(1, 30)));
-		mapDownloads.add(newDownloadLink("Minecraft World Map", "http://www.minecraftworldmap.com/search"));
-		mapDownloads.add(Box.createRigidArea(new Dimension(1, 30)));
-		mapDownloads.add(newDownloadLink("Minecraft Maps", "http://www.minecraftmaps.com/"));
-		mapDownloads.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		mapDownloads.add(Box.createRigidArea(new Dimension(30, 30)));
 
-		mapsContainer.setLayout(new BoxLayout(mapsContainer, BoxLayout.Y_AXIS));
-		mapsContainer.add(mapDownloads);
+		JPanel buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+		buttons.add(Box.createRigidArea(new Dimension(30, 30)));
+		buttons.add(newDownloadLink("Planet Minecraft", "http://www.planetminecraft.com/resources/projects/any/?share=world_link"));
+		buttons.add(Box.createRigidArea(new Dimension(30, 30)));
+		buttons.add(newDownloadLink("Minecraft World Map", "http://www.minecraftworldmap.com/search"));
+		buttons.add(Box.createRigidArea(new Dimension(30, 30)));
+		buttons.add(newDownloadLink("Minecraft Maps", "http://www.minecraftmaps.com/"));
+		buttons.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+		mapDownloads.add(buttons);
+
+		helpFooter.setLayout(new BoxLayout(helpFooter, BoxLayout.Y_AXIS));
+		helpFooter.add(Box.createRigidArea(new Dimension(15, 15)), 0);
+		helpFooter.add(mapDownloads, 1);
 	}
 
 	public JButton newDownloadLink(String text, final String url) {
 		JButton button = new JButton(text);
-		button.setPreferredSize(new Dimension(250, 90));
-		button.setMinimumSize(new Dimension(250, 90));
-		button.setMaximumSize(new Dimension(250, 90));
+		int buttonWidth = WIDTH_MAPITEM_TITLE + HEIGHT_MAPITEM;
+		button.setPreferredSize(new Dimension(buttonWidth, HEIGHT_MAPITEM / 2));
+		button.setMinimumSize(new Dimension(buttonWidth, HEIGHT_MAPITEM / 2));
+		button.setMaximumSize(new Dimension(buttonWidth, HEIGHT_MAPITEM / 2));
 		button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		button.setForeground(CustomPalette.GREEN);
 
 		button.setFont(CustomFont.minecraft);
 		button.setFocusPainted(false);

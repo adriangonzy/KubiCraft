@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class UpdateCheck {
 
-	public static String NEW_VERSION_DOWNLOAD_LINK = "https://github.com/adriangonzy/KubiCraft";
+	public static String NEW_VERSION_DOWNLOAD_LINK = "http://adriangonzy.github.io/KubiCraft/";
 	public static String LATEST_VERSION_URL = "http://storage.googleapis.com/kubity-software-factory/minecraft/latest/version.txt";
 
 	private static String fetchLatestVersion() {
