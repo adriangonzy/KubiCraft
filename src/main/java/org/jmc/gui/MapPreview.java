@@ -34,7 +34,7 @@ public class MapPreview extends MapThumbnail implements MouseMotionListener, Mou
 	int screen_ez=-1;
 
 	private int zoom_level_pos=7;
-	private final float zoom_levels[]={0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 10.0f};
+	private final float zoom_levels[]={0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1.0f};
 
 	private boolean selecting_area=false;
 	private boolean moving_map=false;
