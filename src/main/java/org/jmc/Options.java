@@ -27,16 +27,6 @@ public class Options
 	public static File outputDir = new File(".");
 
 	/**
-	 * Lower bound of the volume to export.
-	 */
-	public static int minX=-32, minY=0, minZ=-32;
-
-	/**
-	 * Upper bound of the volume to export.
-	 */
-	public static int maxX=32, maxY=256, maxZ=32;
-
-	/**
 	 * How to scale the exported geometry.
 	 */
 	public static float scale = 1.0f;

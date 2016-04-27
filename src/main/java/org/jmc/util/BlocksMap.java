@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by Paul on 22/04/2016.
  */
-public class BlockCorrespondance {
+public class BlocksMap {
 	public static class Block{
 		public final String tint;
 		public final String fileName;
@@ -324,6 +324,7 @@ public class BlockCorrespondance {
 
 		/********** other **********/
 		blocks.add(new Block("water.png", "water_still.png"));
+		blocks.add(new Block("steve.png", "skull_steve.png"));
 		blocks.add(new Block("water_flowing.png", "water_flow.png"));
 		blocks.add(new Block("lava.png", "lava_still.png"));
 		blocks.add(new Block("lava_flowing.png", "lava_flow.png"));

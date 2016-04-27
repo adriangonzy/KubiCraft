@@ -67,40 +67,45 @@ public class ReaderRunnable implements Runnable {
 				addChunkIfExists(mapInfo, chunkBuffer, lx, lz);
 			}
 		}
-		
+
 		chunkDeligate.setCurrentChunk(new Point(chunkX, chunkZ));
 
 		// export the chunk to the OBJ
-		ChunkProcessor proc = new ChunkProcessor();
-		List<Face> faces = proc.process(chunkDeligate, chunkX, chunkZ);
-		
-		// remove the chunks we won't need anymore from the buffer 
-		for (int lx = chunkX - 1; lx <= chunkX + 1; lx++) {
-			for (int lz = chunkZ - 1; lz <= chunkZ + 1; lz++) {
-				chunkBuffer.removeChunk(lx, lz);
-			}
-		}
+		List<Face> faces = new ChunkProcessor().process(chunkDeligate, chunkX, chunkZ);
+
+		/*** Commented for the moment because it causes bugs ***/
+		/*** TODO: refactor the whole chunkbuffer and chunkdeligate using global cache ***/
+		// remove the chunks we won't need anymore from the buffer
+//		for (int lx = chunkX - 1; lx <= chunkX + 1; lx++) {
+//			for (int lz = chunkZ - 1; lz <= chunkZ + 1; lz++) {
+//				chunkBuffer.removeChunk(lx, lz);
+//			}
+//		}
 		
 		ChunkOutput output = new ChunkOutput(faces);
 		return output;
 	}
 	
 	private static boolean addChunkIfExists(MapInfo mapInfo, ChunkDataBuffer chunk_buffer, int x, int z) {
-		if (chunk_buffer.hasChunk(x, z))
+		if (chunk_buffer.hasChunk(x, z)) {
 			return true;
+		}
 
 		try {
 			Region region = Region.findRegion(mapInfo, x, z);
-			if (region == null)
+			if (region == null) {
 				return false;
+			}
 
 			Chunk chunk = region.getChunk(x, z);
-			if (chunk == null)
+			if (chunk == null) {
 				return false;
+			}
 
 			chunk_buffer.addChunk(chunk);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

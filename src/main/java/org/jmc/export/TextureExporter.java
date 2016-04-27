@@ -1,11 +1,10 @@
 package org.jmc.export;
 
-import org.jmc.util.BlockCorrespondance;
+import org.jmc.util.BlocksMap;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImagingOpException;
 import java.awt.image.WritableRaster;
 import java.io.*;
 import java.nio.file.Path;
@@ -21,80 +20,16 @@ import static org.jmc.util.Resources.loadCustom;
  * Created by Paul on 25/04/2016.
  */
 public class TextureExporter {
-	private static final String TEX_FOLDER = "conf/textures/tex";
-	private static final int TEXTURE_SIZE = 128;
+	private final String TEX_FOLDER = "conf/textures/tex";
+	private final int TEXTURE_SIZE = 256;
+	public static final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "customTextures").toAbsolutePath().toString();
 
-	/**
-	 * If path is null, load default texture
-	 * if path isn't null, try to load custom texture
- 	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	public static Iterator<Map.Entry<String, InputStream>> loadTextures(String path) throws IOException {
-		Iterator<Map.Entry<String, InputStream>> textures;
+	public Iterator<Map.Entry<String, InputStream>> loadTextures(String path) throws IOException {
+		Map<String, String> textures;
 		if (path != null && path.length() > 0) {
 			textures = loadCustomTextures(path);
 		} else {
-			textures = loadDefaultTextures();
-		}
-		return textures;
-	}
-
-
-	private static Iterator<Map.Entry<String, InputStream>> loadCustomTextures(String path) throws IOException {
-		Map<String, String> textures = loadTextureFromJar();
-
-		File file = Paths.get(path).toFile();
-		if (!isTextureRepertory(file)) {
-			throw new IOException("This is not a Texture File !");
-		}
-
-		//Get Blocks
-		Path completPath = Paths.get(path, "assets", "minecraft", "textures");
-		Map<String, String> texturesCustom = listAllTexture(completPath.toString());
-
-		File customTexturesRepertory = Paths.get(System.getProperty("user.dir"), "customTextures").toFile();
-		customTexturesRepertory.mkdir();
-		String customPath;
-
-		/* Replace default image */
-		for (String name : textures.keySet()) {
-			//Look if we stock the block info in BlockCorrespondance
-			BlockCorrespondance.Block block = BlockCorrespondance.get(name);
-			if (block == null) {
-				String p = texturesCustom.get(name);
-				if(p != null) {
-					//We didn't get any information for the current block, but we got a custom texture in the repertory
-
-					//Square if needed
-					customPath = squareImage(p, name);
-
-					//Resize if needed image
-					customPath = resizeImage(name, customPath, TEXTURE_SIZE);
-					textures.put(name, customPath);
-				}
-			} else {
-				customPath = texturesCustom.get(block.mtlName);
-				if (customPath != null){
-					//We got some informations about the block
-					if (block.isSquare) {
-						customPath = squareImage(customPath, name);
-					}
-
-					if (!block.tint.equals("")){
-						//This block need a particular tint
-						customPath = tintImage(customPath, name, new Color(Integer.parseInt(block.tint, 16)));
-					}
-
-					//Resize image
-					customPath = resizeImage(name, customPath, TEXTURE_SIZE);
-					textures.put(name, customPath);
-				} else {
-					//TODO: Correct message here
-					System.out.println(name + " texture is missing.");
-				}
-			}
+			textures = loadTextureFromJar();
 		}
 
 		final Iterator<Map.Entry<String, String>> iterator = textures.entrySet().iterator();
@@ -119,32 +54,48 @@ public class TextureExporter {
 	}
 
 
+	private Map<String, String> loadCustomTextures(String path) throws IOException {
+		Map<String, String> textures = loadTextureFromJar();
 
-	private static Iterator<Map.Entry<String, InputStream>> loadDefaultTextures() throws IOException {
-		// load texture paths by name
-		final Map<String, String> textures = loadTextureFromJar();
-		final Iterator<Map.Entry<String, String>> iterator = textures.entrySet().iterator();
+		//Get textures
+		Path fullPath = Paths.get(path, "assets", "minecraft", "textures");
+		Map<String, String> texturesCustom = listAllTexture(fullPath.toString());
 
-		return new Iterator<Map.Entry<String, InputStream>>() {
-			@Override
-			public boolean hasNext() {
-				return iterator.hasNext();
+		File customTexturesRepertory = Paths.get(PATH_TO_CUSTOM_TEXTURE).toFile();
+		customTexturesRepertory.mkdir();
+
+		/** Replace default image **/
+		for (String name : new ArrayList<>(textures.keySet())) {
+			BlocksMap.Block block = BlocksMap.get(name);
+			if (block == null) {
+				transformTexture(new BlocksMap.Block(name, name, "", false),textures, texturesCustom.get(name), false);
+			} else {
+				transformTexture(block, textures, texturesCustom.get(block.mtlName), true);
 			}
-
-			@Override
-			public Map.Entry<String, InputStream> next() {
-				Map.Entry<String, String> entry = iterator.next();
-				return new AbstractMap.SimpleEntry<>(entry.getKey(), load(entry.getValue()));
-			}
-
-			@Override
-			public void remove() {
-				iterator.remove();
-			}
-		};
+		}
+		return textures;
 	}
 
-	private static Map<String, String> loadTextureFromJar() throws IOException {
+	private void transformTexture(BlocksMap.Block block, Map<String, String> textures, String p, boolean alreadyInMap){
+		String path = p;
+
+		if (path != null){
+			if (block.isSquare) {
+				path = squareImage(path, block.mtlName);
+			}
+			if (!block.tint.equals("")){
+				path = tintImage(path, block.mtlName, new Color(Integer.parseInt(block.tint, 16)));
+			}
+			path = resizeImage(block.mtlName, path);
+			textures.remove(block.mtlName);
+			textures.put(block.mtlName, path);
+		} else if(alreadyInMap) {
+			System.out.println(block.mtlName + " texture is missing.");
+		}
+	}
+
+
+	private Map<String, String> loadTextureFromJar() throws IOException {
 		final Map<String, String> textures = new HashMap<>();
 		final File jarFile = new File(TextureExporter.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 		if (jarFile.isFile()) {
@@ -168,7 +119,7 @@ public class TextureExporter {
 		return textures;
 	}
 
-	private static Map<String, String> listAllTexture(String path){
+	private Map<String, String> listAllTexture(String path){
 		Map<String, String> textures= new HashMap<>();
 
 		File repertory = new File(path);
@@ -193,111 +144,74 @@ public class TextureExporter {
 		return textures;
 	}
 
-	public static boolean isTextureRepertory(File file) {
-		File[] subfiles = file.listFiles();
-		boolean gotAssets = false;
-		boolean gotMcmeta = false;
-		boolean gotMinecraft = false;
-
-		if (!file.exists() || !file.isDirectory()) {
-			return false;
-		}
-
-		for (int i = 0; i < subfiles.length; i++) {
-			if (subfiles[i].getName().equals("assets")) {
-				gotAssets = true;
-				File[] assetsFiles = subfiles[i].listFiles();
-				for (int j = 0; j < assetsFiles.length; j++) {
-					if (assetsFiles[j].getName().equals("minecraft")) {
-						gotMinecraft = true;
-					}
-				}
-			} else if (subfiles[i].getName().equals("pack.mcmeta")) {
-				gotMcmeta = true;
-			}
-
-			if( gotAssets && gotMcmeta && gotMinecraft ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static String squareImage(String path, String name) {
+	private String squareImage(String path, String name) {
 		//Entities aren't square !
 		if (path.contains("entity")){
 			return path;
 		}
 
-		File customTexturesRepertory = Paths.get(System.getProperty("user.dir"), "customTextures").toFile();
 		try {
-			BufferedImage image = ImageIO.read(new File(path));
+			BufferedImage src = ImageIO.read(new File(path));
 			int size;
 
-			if (image.getHeight() == image.getWidth()) {
+			if (src.getHeight() == src.getWidth()) {
 				return path;
-			}else if (image.getWidth() > image.getHeight()){
-				size = image.getHeight();
+			}else if (src.getWidth() > src.getHeight()){
+				size = src.getHeight();
 			} else {
-				size = image.getWidth();
+				size = src.getWidth();
 			}
-			BufferedImage newImage = new BufferedImage(size,
-					size,
-					BufferedImage.TYPE_INT_ARGB);
+			BufferedImage resized = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 
-			newImage.getGraphics().drawImage(image, 0, 0, null);
-			ImageIO.write(newImage, "png", new File(customTexturesRepertory.getAbsolutePath(), name ));
-			return customTexturesRepertory.getAbsolutePath() + "/" + name;
+			resized.getGraphics().drawImage(src, 0, 0, null);
+			ImageIO.write(resized, "png", new File(PATH_TO_CUSTOM_TEXTURE, name ));
+			return PATH_TO_CUSTOM_TEXTURE + "/" + name;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return path;
 	}
-	private static String resizeImage(String name, String path, int size) {
-		BufferedImage img;
-		File customTexturesRepertory = Paths.get(System.getProperty("user.dir"), "customTextures").toFile();
-
+	private String resizeImage(String name, String path) {
 		try {
-			img = ImageIO.read(new File(path));
-			Image thumbnail;
-			if (img.getWidth() == size || img.getHeight() == size){
+			BufferedImage src = ImageIO.read(new File(path));
+
+			int newWidth;
+			int newHeight;
+			if (src.getWidth() == TEXTURE_SIZE || src.getHeight() == TEXTURE_SIZE){
 				return path;
-			} else if (img.getWidth() > img.getHeight()){
-				thumbnail = img.getScaledInstance(size, -1, Image.SCALE_SMOOTH);
-			} else {
-				thumbnail = img.getScaledInstance(-1, size, Image.SCALE_SMOOTH);
 			}
+			int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+			float scale = TEXTURE_SIZE / (float) minSize;
 
-			BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
-					thumbnail.getHeight(null),
-					BufferedImage.TYPE_INT_ARGB);
+			newWidth = (int) (scale * src.getWidth());
+			newHeight = (int) (scale * src.getHeight());
 
-			bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
-			ImageIO.write(bufferedThumbnail, "png", new File(customTexturesRepertory.getAbsolutePath(), name ));
+			BufferedImage resized = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+			Graphics2D g2 = resized.createGraphics();
+			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+			g2.drawImage(src, 0, 0, newWidth, newHeight, null);
+			g2.dispose();
+
+			ImageIO.write(resized, "png", new File(PATH_TO_CUSTOM_TEXTURE, name));
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return customTexturesRepertory.getAbsolutePath() + "/" + name;
+		return PATH_TO_CUSTOM_TEXTURE + "/" + name;
 	}
-	private static String tintImage(String path, String name, Color tint) {
-		BufferedImage img;
-		File customTexturesRepertory = Paths.get(System.getProperty("user.dir"), "customTextures").toFile();
+	private String tintImage(String path, String name, Color tint) {
 		try {
-			img = ImageIO.read(new File(path));
+			BufferedImage src = ImageIO.read(new File(path));
 
-			int w = img.getWidth();
-			int h = img.getHeight();
-			int c = img.getColorModel().getPixelSize() / 8;
+			int w = src.getWidth();
+			int h = src.getHeight();
+			int c = src.getColorModel().getPixelSize() / 8;
+			int nbCanal = c;
 
-			if (c != 4) {
-				throw new ImagingOpException("Texture is not 32-bit!");
-			}
+			int[] buffer = new int[w * h * nbCanal];
 
-			int[] buffer = new int[w * h * c];
-
-			WritableRaster raster = img.getRaster();
+			WritableRaster raster = src.getRaster();
 			raster.getPixels(0, 0, w, h, buffer);
 
 			int r = tint.getRed();
@@ -305,26 +219,26 @@ public class TextureExporter {
 			int b = tint.getBlue();
 
 			for (int i = 0; i < w * h; i++) {
-				c = (buffer[4 * i] * r) >> 8;
+				c = (buffer[nbCanal * i] * r) >> 8;
 				if (c > 255)
 					c = 255;
-				buffer[4 * i] = c;
+				buffer[nbCanal * i] = c;
 
-				c = (buffer[4 * i + 1] * g) >> 8;
+				c = (buffer[nbCanal * i + 1] * g) >> 8;
 				if (c > 255)
 					c = 255;
-				buffer[4 * i + 1] = c;
+				buffer[nbCanal * i + 1] = c;
 
-				c = (buffer[4 * i + 2] * b) >> 8;
+				c = (buffer[nbCanal * i + 2] * b) >> 8;
 				if (c > 255)
 					c = 255;
-				buffer[4 * i + 2] = c;
+				buffer[nbCanal * i + 2] = c;
 			}
 
 			raster.setPixels(0, 0, w, h, buffer);
-			ImageIO.write(img, "png", new File(customTexturesRepertory.getAbsolutePath(), name ));
+			ImageIO.write(src, "png", new File(PATH_TO_CUSTOM_TEXTURE, name ));
 
-			return customTexturesRepertory.getAbsolutePath()+"/"+name;
+			return PATH_TO_CUSTOM_TEXTURE + "/" + name;
 		} catch (IOException e) {
 			return path;
 		}

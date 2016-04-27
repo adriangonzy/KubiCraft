@@ -158,6 +158,7 @@ public class ViewChunkLoaderThread implements ChunkLoaderThread {
 						if(loaded_chunks.contains(cx*MAX_CHUNK_NUM+cz)) continue;
 
 						try {
+							// TODO: if the region is missing we should not iterate over all the chunks in the region...
 							region=Region.findRegion(mapInfo, cx, cz);
 							chunk=region.getChunk(cx, cz);
 						} catch (Exception e) {

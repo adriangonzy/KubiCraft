@@ -6,7 +6,7 @@
 
 	<groupId>com.kubity</groupId>
 	<artifactId>kubicraft</artifactId>
-	<version>0.0.1-beta1</version>
+	<version>0.0.1-beta2</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 

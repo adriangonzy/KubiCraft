@@ -16,6 +16,7 @@ import org.jmc.world.Region;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,20 +98,20 @@ public class ObjExporter {
 		// Add Obj file to the zip
 		out.putNextEntry(new ZipEntry(objfile.getName()));
 
-		if (Options.maxX - Options.minX == 0 || Options.maxY - Options.minY == 0 || Options.maxZ - Options.minZ == 0) {
+		if (mapInfo.bounds.maxX - mapInfo.bounds.minX == 0 || mapInfo.bounds.maxY - mapInfo.bounds.minY == 0 || mapInfo.bounds.maxZ - mapInfo.bounds.minZ == 0) {
 			Log.error(Messages.getString("MainPanel.SEL_ERR"), null, true);
 			return 0;
 		}
 
 		// Calculate the boundaries of the chunks selected by the user
-		Point cs = Chunk.getChunkPos(Options.minX, Options.minZ);
-		Point ce = Chunk.getChunkPos(Options.maxX + 15, Options.maxZ + 15);
+		Point cs = Chunk.getChunkPos(mapInfo.bounds.minX, mapInfo.bounds.minZ);
+		Point ce = Chunk.getChunkPos(mapInfo.bounds.maxX + 15, mapInfo.bounds.maxZ + 15);
 		int oxs, oys, ozs;
 
 		if (Options.offsetType == OffsetType.CENTER) {
-			oxs = -(Options.minX + (Options.maxX - Options.minX) / 2);
-			oys = -Options.minY;
-			ozs = -(Options.minZ + (Options.maxZ - Options.minZ) / 2);
+			oxs = -(mapInfo.bounds.minX + (mapInfo.bounds.maxX - mapInfo.bounds.minX) / 2);
+			oys = -mapInfo.bounds.minY;
+			ozs = -(mapInfo.bounds.minZ + (mapInfo.bounds.maxZ - mapInfo.bounds.minZ) / 2);
 			Log.info("Center offset: " + oxs + "/" + oys + "/" + ozs);
 		} else if (Options.offsetType == OffsetType.CUSTOM) {
 			oxs = Options.offsetX;
@@ -125,8 +126,8 @@ public class ObjExporter {
 
 		int chunksToDo = (ce.x - cs.x + 1) * (ce.y - cs.y + 1);
 
-		ChunkDataBuffer chunk_buffer = new ChunkDataBuffer(Options.minX, Options.maxX, Options.minY,
-				Options.maxY, Options.minZ, Options.maxZ);
+		ChunkDataBuffer chunk_buffer = new ChunkDataBuffer(mapInfo.bounds.minX, mapInfo.bounds.maxX, mapInfo.bounds.minY,
+				mapInfo.bounds.maxY, mapInfo.bounds.minZ, mapInfo.bounds.maxZ);
 
 		List<Point> inputPoints = new ArrayList<>(50000);
 		ThreadOutputQueue outputQueue = new ThreadOutputQueue();
@@ -159,6 +160,7 @@ public class ObjExporter {
 		for (int i = 0; i < Options.exportThreads; i++) {
 			int start = (i * inputPoints.size() / Options.exportThreads);
 			int end = ((i + 1) * inputPoints.size() / Options.exportThreads);
+
 			threads[i] = new Thread(new ReaderRunnable(mapInfo, chunk_buffer, cs, ce, inputPoints, start, end, outputQueue));
 			threads[i].setName("ReadThread-" + i);
 			threads[i].setPriority(Thread.NORM_PRIORITY - 1);
@@ -188,12 +190,14 @@ public class ObjExporter {
 	private static boolean chunkExists(MapInfo mapInfo, int x, int z) {
 		try {
 			Region region = Region.findRegion(mapInfo, x, z);
-			if (region == null)
+			if (region == null) {
 				return false;
+			}
 
 			Chunk chunk = region.getChunk(x, z);
-			if (chunk == null)
+			if (chunk == null) {
 				return false;
+			}
 
 			return true;
 		} catch (Exception e) {
@@ -202,7 +206,8 @@ public class ObjExporter {
 	}
 
 	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out) throws IOException {
-		Iterator<Map.Entry<String, InputStream>> textureIterator = TextureExporter.loadTextures(mapInfo.texturePath);
+		TextureExporter textureExporter = new TextureExporter();
+		Iterator<Map.Entry<String, InputStream>> textureIterator = textureExporter.loadTextures(mapInfo.texturePath);
 		while (textureIterator.hasNext()) {
 			Map.Entry<String, InputStream> tex = textureIterator.next();
 			out.putNextEntry(new ZipEntry("tex/" + tex.getKey()));
