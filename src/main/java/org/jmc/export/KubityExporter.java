@@ -130,14 +130,14 @@ public class KubityExporter {
 	}
 
 	private static String getPackerURL() {
-		return "https://packer-preprod.kubity.com:443/api/pack";
+		return "https://packer-prod.kubity.com:443/api/pack";
 	}
 
 	private static String getLoadingURL(String packId, Path path) throws IOException {
 		String url = "%s://%s/loading/%s?filename=%s&filesize=%s&pluginVersion=%s&softwareVersion=%s";
 		String filename = URLEncoder.encode(path.getFileName().toString(), "UTF-8");
 		String mcVersion = new LevelDat(path.toFile()).getVersion();
-		return String.format(url, "https", "preprod.kubity.com", packId, filename, Files.size(path), KubityExporter.VERSION, mcVersion);
+		return String.format(url, "https", "www.kubity.com", packId, filename, Files.size(path), KubityExporter.VERSION, mcVersion);
 	}
 
 	private static class Pack {
