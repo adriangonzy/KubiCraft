@@ -62,6 +62,8 @@ We are currently Beta so there are still many issues to be corrected.
     - Chorus plant
 
 - Missing or Bugged items:
+    - Banners positionning is not accurate
+    - Buttons positionning is not accurate
     - cauldron missing top faces
     - hopper missing top faces
     - comparator missing top faces
@@ -72,7 +74,7 @@ We are currently Beta so there are still many issues to be corrected.
     - item frames
     - armor stand with armor (missing armor)
     - maps in item frames
-    - banners
+    - banners do not use created texture
     - 1.9.* panes (fences, glass, grates, end rods)
     - end rods
     - rails do not render correctly when contiguous
