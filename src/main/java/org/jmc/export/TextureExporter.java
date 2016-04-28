@@ -78,7 +78,9 @@ public class TextureExporter {
 		for (String name : new ArrayList<>(textures.keySet())) {
 			BlocksMap.Block block = BlocksMap.get(name);
 			if (block == null) {
-				transformTexture(new BlocksMap.Block(name, name, "", false),textures, texturesCustom.get(name), false);
+				if (texturesCustom.get(name) != null) {
+					transformTexture(new BlocksMap.Block(name, name, "", true), textures, texturesCustom.get(name), false);
+				}
 			} else {
 				transformTexture(block, textures, texturesCustom.get(block.mtlName), true);
 			}
