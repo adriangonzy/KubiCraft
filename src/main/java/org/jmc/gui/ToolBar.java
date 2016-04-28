@@ -164,7 +164,6 @@ public class ToolBar {
 			}
 		});
 		textureDefaultButton.addActionListener(new ActionListener() {
-			@SuppressWarnings("Duplicates")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser() {
@@ -191,14 +190,18 @@ public class ToolBar {
 					File selectedTextureFolder = fileChooser.getSelectedFile();
 					if (Filesystem.isTextureRepertory(selectedTextureFolder)) {
 						mapInfo.texturePath = selectedTextureFolder.getAbsolutePath();
+						selectionTextureFolder = Paths.get(mapInfo.texturePath).toFile().getParentFile();
 						textureDefaultButton.setText("Texture: " + Paths.get(mapInfo.texturePath).getFileName().toString());
 					} else {
 						delegate.showError(Messages.getString("MainPanel.ENTER_VALID_TEXTURE"));
 					}
+				} else {
+						mapInfo.texturePath = "";
+						textureDefaultButton.setText("Texture: default");
+					}
 				}
-			}
-		});
-	}
+			});
+		}
 
 	public void disableBExport(boolean isExporting) {
 		bExport.setForeground(CustomPalette.FLASHY_GREEN);
@@ -270,7 +273,7 @@ public class ToolBar {
 	}
 
 	public void updateProgressState(int value) {
-		String status = bExport.getText().split(" ")[0].trim();
+		String status = bExport.getText().substring(0, bExport.getText().lastIndexOf(" "));
 		if (!status.equals("Export")) {
 			bExport.setText(status + " " + value + "%");
 		}
@@ -278,6 +281,12 @@ public class ToolBar {
 
 	public void exportState() {
 		bExport.setText("Exporting 0%");
+		bExport.setToolTipText(Messages.getString("PreviewWindow.EXPORTING_DISABLED_WHILE_EXPORTING"));
+		bExport.setForeground(CustomPalette.LIGHT_GREEN);
+	}
+
+	public void exportTextureState() {
+		bExport.setText("Exporting Textures 0%");
 		bExport.setToolTipText(Messages.getString("PreviewWindow.EXPORTING_DISABLED_WHILE_EXPORTING"));
 		bExport.setForeground(CustomPalette.LIGHT_GREEN);
 	}

@@ -16,7 +16,6 @@ import org.jmc.world.Region;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +68,11 @@ public class ObjExporter {
 				return;
 			}
 
-			addTexturesToZip(mapInfo, exportOutputStream);
+			if (progress != null) {
+				progress.setStatus(ProgressCallback.Status.EXPORTING_TEXTURE);
+			}
+
+			addTexturesToZip(mapInfo, exportOutputStream, progress);
 			addMTLToZip(exportOutputStream);
 			exportOutputStream.close();
 
@@ -205,9 +208,9 @@ public class ObjExporter {
 		}
 	}
 
-	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out) throws IOException {
-		TextureExporter textureExporter = new TextureExporter();
-		Iterator<Map.Entry<String, InputStream>> textureIterator = textureExporter.loadTextures(mapInfo.texturePath);
+	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out, ProgressCallback progress) throws IOException {
+		TextureExporter textureExporter = new TextureExporter(mapInfo.texturePath, progress);
+		Iterator<Map.Entry<String, InputStream>> textureIterator = textureExporter.loadTextures();
 		while (textureIterator.hasNext()) {
 			Map.Entry<String, InputStream> tex = textureIterator.next();
 			out.putNextEntry(new ZipEntry("tex/" + tex.getKey()));

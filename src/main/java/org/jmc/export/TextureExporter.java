@@ -22,12 +22,20 @@ import static org.jmc.util.Resources.loadCustom;
 public class TextureExporter {
 	private final String TEX_FOLDER = "conf/textures/tex";
 	private final int TEXTURE_SIZE = 256;
-	public static final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "customTextures").toAbsolutePath().toString();
+	public  final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "customTextures").toAbsolutePath().toString();
 
-	public Iterator<Map.Entry<String, InputStream>> loadTextures(String path) throws IOException {
+	private final String texturePath;
+	private final ProgressCallback progress;
+
+	public TextureExporter(String texturePath, ProgressCallback progress) {
+		this.texturePath = texturePath;
+		this.progress = progress;
+	}
+
+	public Iterator<Map.Entry<String, InputStream>> loadTextures() throws IOException {
 		Map<String, String> textures;
-		if (path != null && path.length() > 0) {
-			textures = loadCustomTextures(path);
+		if (texturePath != null && texturePath.length() > 0) {
+			textures = loadCustomTextures(texturePath);
 		} else {
 			textures = loadTextureFromJar();
 		}
@@ -64,6 +72,8 @@ public class TextureExporter {
 		File customTexturesRepertory = Paths.get(PATH_TO_CUSTOM_TEXTURE).toFile();
 		customTexturesRepertory.mkdir();
 
+		int cpt = 0;
+
 		/** Replace default image **/
 		for (String name : new ArrayList<>(textures.keySet())) {
 			BlocksMap.Block block = BlocksMap.get(name);
@@ -71,6 +81,13 @@ public class TextureExporter {
 				transformTexture(new BlocksMap.Block(name, name, "", false),textures, texturesCustom.get(name), false);
 			} else {
 				transformTexture(block, textures, texturesCustom.get(block.mtlName), true);
+			}
+
+			//Update progress bar
+			if (progress != null) {
+				float progValue = (float) cpt / (float) textures.size();
+				progress.setProgress(progValue);
+				cpt++;
 			}
 		}
 		return textures;

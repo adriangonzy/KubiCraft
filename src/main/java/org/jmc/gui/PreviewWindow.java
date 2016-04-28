@@ -218,6 +218,9 @@ public class PreviewWindow extends JPanel {
 						if (status == Status.EXPORTING) {
 							pToolbar.exportState();
 						}
+						if (status == Status.EXPORTING_TEXTURE) {
+							pToolbar.exportTextureState();
+						}
 						if (status == Status.UPLOADING) {
 							pToolbar.uploadState();
 						}
