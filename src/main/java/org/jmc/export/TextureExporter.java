@@ -76,21 +76,20 @@ public class TextureExporter {
 		return textures;
 	}
 
-	private void transformTexture(BlocksMap.Block block, Map<String, String> textures, String p, boolean alreadyInMap){
-		String path = p;
-
+	private void transformTexture(BlocksMap.Block block, Map<String, String> textures, String previousPath, boolean alreadyInMap){
+		String path = previousPath;
 		if (path != null){
 			if (block.isSquare) {
-				path = squareImage(path, block.mtlName);
+				path = squareImage(path, block.fileName);
 			}
 			if (!block.tint.equals("")){
-				path = tintImage(path, block.mtlName, new Color(Integer.parseInt(block.tint, 16)));
+				path = tintImage(path, block.fileName, new Color(Integer.parseInt(block.tint, 16)));
 			}
-			path = resizeImage(block.mtlName, path);
-			textures.remove(block.mtlName);
-			textures.put(block.mtlName, path);
+			path = resizeImage(block.fileName, path);
+			textures.remove(block.fileName);
+			textures.put(block.fileName, path);
 		} else if(alreadyInMap) {
-			System.out.println(block.mtlName + " texture is missing.");
+			System.out.println(block.fileName + " texture is missing.");
 		}
 	}
 
