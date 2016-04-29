@@ -274,7 +274,7 @@ public class ToolBar {
 	}
 
 	public void exportState() {
-		bExport.setText("Exporting Obj 0%");
+		bExport.setText("Exporting Geometry 0%");
 		bExport.setToolTipText(Messages.getString("PreviewWindow.EXPORTING_DISABLED_WHILE_EXPORTING"));
 		bExport.setForeground(CustomPalette.LIGHT_GREEN);
 	}
