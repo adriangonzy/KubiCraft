@@ -17,7 +17,7 @@ public class Resources {
 		return res;
 	}
 
-	public static InputStream loadCustom(String resourceName) {
+	public static InputStream loadFile(String resourceName) {
 		InputStream res;
 		try {
 			res = new FileInputStream(resourceName);

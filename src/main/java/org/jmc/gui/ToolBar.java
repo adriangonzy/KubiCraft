@@ -2,7 +2,6 @@ package org.jmc.gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import org.jmc.export.TextureExporter;
 import org.jmc.util.Filesystem;
 import org.jmc.util.Messages;
 import org.jmc.world.MapInfo;
@@ -12,9 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
@@ -24,7 +20,6 @@ import java.util.ResourceBundle;
 public class ToolBar {
 
 	private final ToolbarHandler delegate;
-	private final MainWindow mainWindow;
 	private JPanel toolbarPanel;
 	private JButton bBack;
 	private JButton bExport;
@@ -122,8 +117,7 @@ public class ToolBar {
 		void changeDimension(MapInfo mapInfo);
 	}
 
-	public ToolBar(MainWindow mainWindow, MapInfo mapInfo, ToolbarHandler delegate) {
-		this.mainWindow = mainWindow;
+	public ToolBar(MapInfo mapInfo, ToolbarHandler delegate) {
 		this.delegate = delegate;
 		this.mapInfo = mapInfo;
 		initComponent();
@@ -280,7 +274,7 @@ public class ToolBar {
 	}
 
 	public void exportState() {
-		bExport.setText("Exporting 0%");
+		bExport.setText("Exporting Obj 0%");
 		bExport.setToolTipText(Messages.getString("PreviewWindow.EXPORTING_DISABLED_WHILE_EXPORTING"));
 		bExport.setForeground(CustomPalette.LIGHT_GREEN);
 	}

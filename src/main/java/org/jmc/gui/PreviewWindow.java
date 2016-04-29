@@ -9,7 +9,6 @@ package org.jmc.gui;
 
 import org.jmc.NBT.TAG_Double;
 import org.jmc.NBT.TAG_List;
-import org.jmc.Options;
 import org.jmc.export.KubityExporter;
 import org.jmc.export.ObjExporter;
 import org.jmc.export.ProgressCallback;
@@ -63,7 +62,7 @@ public class PreviewWindow extends JPanel {
 			remove(pToolbar.getToolbarPanel());
 		}
 
-		pToolbar = new ToolBar(mainWindow, mapInfo, new ToolBar.ToolbarHandler() {
+		pToolbar = new ToolBar(mapInfo, new ToolBar.ToolbarHandler() {
 			@Override
 			public void back() {
 				goBack();
@@ -215,10 +214,10 @@ public class PreviewWindow extends JPanel {
 
 					@Override
 					public void setStatus(Status status) {
-						if (status == Status.EXPORTING) {
+						if (status == Status.EXPORTING_OBJ) {
 							pToolbar.exportState();
 						}
-						if (status == Status.EXPORTING_TEXTURE) {
+						if (status == Status.EXPORTING_TEXTURES) {
 							pToolbar.exportTextureState();
 						}
 						if (status == Status.UPLOADING) {

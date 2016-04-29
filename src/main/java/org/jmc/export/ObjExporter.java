@@ -49,11 +49,6 @@ public class ObjExporter {
 		}
 
 		try {
-
-			if (progress != null) {
-				progress.setStatus(ProgressCallback.Status.EXPORTING);
-			}
-
 			long nbTriangle = addOBJToZip(mapInfo, exportOutputStream, progress);
 
 			if (nbTriangle > Options.MAX_WARNING_TRIANGLE && nbTriangle < Options.MAX_ALLOWED_TRIANGLE) {
@@ -66,10 +61,6 @@ public class ObjExporter {
 						"). This might change with future releases. Check the FAQ for more info.");
 				deleteFiles(exportFile);
 				return;
-			}
-
-			if (progress != null) {
-				progress.setStatus(ProgressCallback.Status.EXPORTING_TEXTURE);
 			}
 
 			addTexturesToZip(mapInfo, exportOutputStream, progress);
@@ -97,6 +88,10 @@ public class ObjExporter {
 	}
 
 	private static long addOBJToZip(MapInfo mapInfo, ZipOutputStream out, ProgressCallback progress) throws IOException, InterruptedException {
+		if (progress != null) {
+			progress.setStatus(ProgressCallback.Status.EXPORTING_OBJ);
+		}
+
 		File objfile = new File(Options.outputDir, "export.obj");
 		// Add Obj file to the zip
 		out.putNextEntry(new ZipEntry(objfile.getName()));
@@ -209,6 +204,10 @@ public class ObjExporter {
 	}
 
 	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out, ProgressCallback progress) throws IOException {
+		if (progress != null) {
+			progress.setStatus(ProgressCallback.Status.EXPORTING_TEXTURES);
+		}
+
 		TextureExporter textureExporter = new TextureExporter(mapInfo.texturePath, progress);
 		Iterator<Map.Entry<String, InputStream>> textureIterator = textureExporter.loadTextures();
 		while (textureIterator.hasNext()) {

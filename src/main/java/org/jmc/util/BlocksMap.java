@@ -429,6 +429,6 @@ public class BlocksMap {
 			if (b.fileName.equals(name))
 				return b;
 		}
-		return null;
+		return new Block(name, name);
 	}
 }

@@ -13,8 +13,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static org.jmc.util.Resources.load;
-import static org.jmc.util.Resources.loadCustom;
+import static org.jmc.util.Resources.*;
 
 /**
  * Created by Paul on 25/04/2016.
@@ -22,7 +21,7 @@ import static org.jmc.util.Resources.loadCustom;
 public class TextureExporter {
 	private final String TEX_FOLDER = "conf/textures/tex";
 	private final int TEXTURE_SIZE = 256;
-	public  final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "customTextures").toAbsolutePath().toString();
+	public  final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "Kubicraft Textures Pack").toAbsolutePath().toString();
 
 	private final String texturePath;
 	private final ProgressCallback progress;
@@ -51,7 +50,7 @@ public class TextureExporter {
 			@Override
 			public Map.Entry<String, InputStream> next() {
 				Map.Entry<String, String> entry = iterator.next();
-				return new AbstractMap.SimpleEntry<>(entry.getKey(), loadCustom(entry.getValue()));
+				return new AbstractMap.SimpleEntry<>(entry.getKey(), loadFile(entry.getValue()));
 			}
 
 			@Override
@@ -63,53 +62,46 @@ public class TextureExporter {
 
 
 	private Map<String, String> loadCustomTextures(String path) throws IOException {
-		Map<String, String> textures = loadTextureFromJar();
-
-		//Get textures
 		Path fullPath = Paths.get(path, "assets", "minecraft", "textures");
-		Map<String, String> texturesCustom = listAllTexture(fullPath.toString());
+		//Get textures
+		Map<String, String> defaultTextures = loadTextureFromJar();
+		Map<String, String> customTextures = listAllCustomTextures(fullPath.toString());
 
 		File customTexturesRepertory = Paths.get(PATH_TO_CUSTOM_TEXTURE).toFile();
 		customTexturesRepertory.mkdir();
-
-		int cpt = 0;
+		String pathToCustomTextures;
+		int count = 0;
 
 		/** Replace default image **/
-		for (String name : new ArrayList<>(textures.keySet())) {
+		for (String name : new ArrayList<>(defaultTextures.keySet())) {
 			BlocksMap.Block block = BlocksMap.get(name);
-			if (block == null) {
-				if (texturesCustom.get(name) != null) {
-					transformTexture(new BlocksMap.Block(name, name, "", true), textures, texturesCustom.get(name), false);
-				}
-			} else {
-				transformTexture(block, textures, texturesCustom.get(block.mtlName), true);
+
+			/* We need to transform only custom texture */
+			if (customTextures.get(block.mtlName) != null) {
+				pathToCustomTextures = transformTexture(block, customTextures.get(block.mtlName));
+				defaultTextures.remove(name);
+				defaultTextures.put(name, pathToCustomTextures);
 			}
 
 			//Update progress bar
 			if (progress != null) {
-				float progValue = (float) cpt / (float) textures.size();
+				float progValue = (float) count / (float) defaultTextures.size();
 				progress.setProgress(progValue);
-				cpt++;
+				count++;
 			}
 		}
-		return textures;
+		return defaultTextures;
 	}
 
-	private void transformTexture(BlocksMap.Block block, Map<String, String> textures, String previousPath, boolean alreadyInMap){
-		String path = previousPath;
-		if (path != null){
-			if (block.isSquare) {
-				path = squareImage(path, block.fileName);
-			}
-			if (!block.tint.equals("")){
-				path = tintImage(path, block.fileName, new Color(Integer.parseInt(block.tint, 16)));
-			}
-			path = resizeImage(block.fileName, path);
-			textures.remove(block.fileName);
-			textures.put(block.fileName, path);
-		} else if(alreadyInMap) {
-			System.out.println(block.fileName + " texture is missing.");
+	private String transformTexture(BlocksMap.Block block, String path){
+		if (block.isSquare) {
+			path = squareImage(path, block.fileName);
 		}
+		if (!block.tint.equals("")){
+			path = tintImage(path, block.fileName, new Color(Integer.parseInt(block.tint, 16)));
+		}
+		path = resizeImage(block.fileName, path);
+		return path;
 	}
 
 
@@ -137,12 +129,12 @@ public class TextureExporter {
 		return textures;
 	}
 
-	private Map<String, String> listAllTexture(String path){
+	private Map<String, String> listAllCustomTextures(String path){
 		Map<String, String> textures= new HashMap<>();
 
 		File repertory = new File(path);
 		if (!repertory.exists()) {
-			return null;
+			return textures;
 		}
 		for (File file : repertory.listFiles()){
 			if (!file.isDirectory()) {
@@ -150,8 +142,12 @@ public class TextureExporter {
 					textures.put(file.getName(), file.getAbsolutePath());
 				}
 			} else {
-				if ((file.getPath().contains("blocks") || file.getPath().contains("entity") || file.getPath().contains("models") || file.getPath().contains("particle")) && !file.getPath().contains("slime")) {
-					Map<String, String> subtextures = listAllTexture(file.getAbsolutePath());
+				if ((file.getPath().contains("blocks")
+						|| file.getPath().contains("entity")
+						|| file.getPath().contains("models")
+						|| file.getPath().contains("particle"))
+						&& !file.getPath().contains("slime")) {
+					Map<String, String> subtextures = listAllCustomTextures(file.getAbsolutePath());
 					if (subtextures != null) {
 						textures.putAll(subtextures);
 					}
@@ -199,6 +195,7 @@ public class TextureExporter {
 				return path;
 			}
 			int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+			//TODO: We must calculate the scale based on the size of the image of a block
 			float scale = TEXTURE_SIZE / (float) minSize;
 
 			newWidth = (int) (scale * src.getWidth());
