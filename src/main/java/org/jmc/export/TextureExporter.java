@@ -25,6 +25,7 @@ public class TextureExporter {
 
 	private final String texturePath;
 	private final ProgressCallback progress;
+	private float blockScale;
 
 	public TextureExporter(String texturePath, ProgressCallback progress) {
 		this.texturePath = texturePath;
@@ -72,6 +73,9 @@ public class TextureExporter {
 		String pathToCustomTextures;
 		int count = 0;
 
+		/* Compute the default texture block image scale */
+		computeBlockScale(customTextures);
+
 		/** Replace default image **/
 		for (String name : new ArrayList<>(defaultTextures.keySet())) {
 			BlocksMap.Block block = BlocksMap.get(name);
@@ -91,6 +95,22 @@ public class TextureExporter {
 			}
 		}
 		return defaultTextures;
+	}
+
+	private void computeBlockScale(Map<String, String> textures) {
+		String tmpPath = textures.get("stone.png");
+		if (tmpPath == null) {
+			tmpPath = textures.get("dirt.png");
+		}
+		BufferedImage src;
+		try {
+			src = ImageIO.read(new File(tmpPath));
+			blockScale = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+			blockScale = TEXTURE_SIZE / blockScale;
+		} catch (IOException e) {
+			System.out.println("Default scale can't be calculate");
+			blockScale = 0;
+		}
 	}
 
 	private String transformTexture(BlocksMap.Block block, String path){
@@ -194,9 +214,11 @@ public class TextureExporter {
 			if (src.getWidth() == TEXTURE_SIZE || src.getHeight() == TEXTURE_SIZE){
 				return path;
 			}
-			int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
-			//TODO: We must calculate the scale based on the size of the image of a block
-			float scale = TEXTURE_SIZE / (float) minSize;
+			float scale = blockScale;
+			if (blockScale == 0) {
+				int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+				scale = TEXTURE_SIZE / (float) minSize;
+			}
 
 			newWidth = (int) (scale * src.getWidth());
 			newHeight = (int) (scale * src.getHeight());
