@@ -18,7 +18,7 @@ public class ContentUtil {
                 "For now, sticking to the 2 Million triangles mark is the best way of having an artefact free export.",
 
         "Can I use my own resource pack ?",
-            "Yes you can ! And ifsome textures are missing, we replace them with defaults textures.\n" +
+            "Yes you can ! And if some textures are missing, we replace them with defaults textures.\n" +
             "However, we only support texture packs with version 1.6 or over.",
 
         "Why my custom resource pack does not show exactly as in minecraft ? ",
