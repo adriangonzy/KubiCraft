@@ -163,7 +163,7 @@ public class Filesystem {
 		return returnDestFolder;
 	}
 
-	public static boolean isTextureRepertory(File file) {
+	public static boolean isTextureFolder(File file) {
 		File[] subfiles = file.listFiles();
 		boolean gotAssets 	 = false;
 		boolean gotMcmeta	 = false;

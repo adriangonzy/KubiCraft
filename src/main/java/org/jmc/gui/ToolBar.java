@@ -182,7 +182,7 @@ public class ToolBar {
 						Messages.getString("MainPanel.CHOOSE_FOLDER")) == JFileChooser.APPROVE_OPTION) {
 
 					File selectedTextureFolder = fileChooser.getSelectedFile();
-					if (Filesystem.isTextureRepertory(selectedTextureFolder)) {
+					if (Filesystem.isTextureFolder(selectedTextureFolder)) {
 						mapInfo.texturePath = selectedTextureFolder.getAbsolutePath();
 						selectionTextureFolder = Paths.get(mapInfo.texturePath).toFile().getParentFile();
 						textureDefaultButton.setText("Texture: " + Paths.get(mapInfo.texturePath).getFileName().toString());

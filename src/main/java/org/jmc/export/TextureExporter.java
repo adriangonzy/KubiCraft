@@ -211,12 +211,14 @@ public class TextureExporter {
 
 			int newWidth;
 			int newHeight;
-			if (src.getWidth() == TEXTURE_SIZE || src.getHeight() == TEXTURE_SIZE){
+			int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+
+			if (minSize * blockScale == TEXTURE_SIZE){
 				return path;
 			}
+
 			float scale = blockScale;
 			if (blockScale == 0) {
-				int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
 				scale = TEXTURE_SIZE / (float) minSize;
 			}
 
