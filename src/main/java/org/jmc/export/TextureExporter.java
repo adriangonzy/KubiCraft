@@ -108,7 +108,7 @@ public class TextureExporter {
 			blockScale = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
 			blockScale = TEXTURE_SIZE / blockScale;
 		} catch (IOException e) {
-			System.out.println("Default scale can't be calculate");
+			System.out.println("Default scale can't be compute");
 			blockScale = 0;
 		}
 	}
