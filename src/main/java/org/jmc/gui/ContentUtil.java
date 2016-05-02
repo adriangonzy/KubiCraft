@@ -18,13 +18,13 @@ public class ContentUtil {
                 "For now, sticking to the 2 Million triangles mark is the best way of having an artefact free export.",
 
         "Can I use my own resource pack ?",
-            "Yes you can ! And if it isn't full, we replace missing textures with defaults textures.\n" +
-            "Only one condition, your texture pack need to be on version 1.6 and more.",
+            "Yes you can ! And ifsome textures are missing, we replace them with defaults textures.\n" +
+            "However, we only support texture packs with version 1.6 or over.",
 
-        "Why my custom resource pack are not exactly the same than in minecraft ? ",
-            "That's because some resource packs require Optifine and MCPatcher.\n\n" +
+        "Why my custom resource pack does not show exactly as in minecraft ? ",
+            "That's because some resource packs require special mods such as Optifine or MCPatcher.\n\n" +
                     "We cannot use the enhanced textures for this pack. " +
-                    "So we only use the normal image. That's why you don't have connected textures, or render, yet.",
+                    "So we try our best to export the textures anyway. That's why you don't have connected textures, or shaders, yet...",
 
         "Why is my world save not working ?",
         "We currently only support minecraft anvil format.\n\n" +
