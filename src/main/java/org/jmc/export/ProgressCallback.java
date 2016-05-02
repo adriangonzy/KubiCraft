@@ -7,7 +7,7 @@ package org.jmc.export;
 public interface ProgressCallback
 {
 	enum Status {
-		EXPORTING, UPLOADING, PROCESSING, FINISHED;
+		EXPORTING_OBJ, EXPORTING_TEXTURES, UPLOADING, PROCESSING, FINISHED;
 	}
 
 	/**

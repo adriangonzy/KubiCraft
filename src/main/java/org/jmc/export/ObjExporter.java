@@ -49,11 +49,6 @@ public class ObjExporter {
 		}
 
 		try {
-
-			if (progress != null) {
-				progress.setStatus(ProgressCallback.Status.EXPORTING);
-			}
-
 			long nbTriangle = addOBJToZip(mapInfo, exportOutputStream, progress);
 
 			if (nbTriangle > Options.MAX_WARNING_TRIANGLE && nbTriangle < Options.MAX_ALLOWED_TRIANGLE) {
@@ -68,7 +63,7 @@ public class ObjExporter {
 				return;
 			}
 
-			addTexturesToZip(exportOutputStream);
+			addTexturesToZip(mapInfo, exportOutputStream, progress);
 			addMTLToZip(exportOutputStream);
 			exportOutputStream.close();
 
@@ -87,12 +82,16 @@ public class ObjExporter {
 			Log.info("Done!");
 		} catch (Exception e) {
 			Log.error("Error while exporting OBJ:", e);
-			errorCallback.handleError("Error while exporting OBJ");
+			errorCallback.handleError("Error while exporting OBJ: " + e.getMessage());
 			deleteFiles(exportFile);
 		}
 	}
 
 	private static long addOBJToZip(MapInfo mapInfo, ZipOutputStream out, ProgressCallback progress) throws IOException, InterruptedException {
+		if (progress != null) {
+			progress.setStatus(ProgressCallback.Status.EXPORTING_OBJ);
+		}
+
 		File objfile = new File(Options.outputDir, "export.obj");
 		// Add Obj file to the zip
 		out.putNextEntry(new ZipEntry(objfile.getName()));
@@ -204,8 +203,13 @@ public class ObjExporter {
 		}
 	}
 
-	private static void addTexturesToZip(ZipOutputStream out) throws IOException {
-		Iterator<Map.Entry<String, InputStream>> textureIterator = Resources.loadTextures();
+	private static void addTexturesToZip(MapInfo mapInfo, ZipOutputStream out, ProgressCallback progress) throws IOException {
+		if (progress != null) {
+			progress.setStatus(ProgressCallback.Status.EXPORTING_TEXTURES);
+		}
+
+		TextureExporter textureExporter = new TextureExporter(mapInfo.texturePath, progress);
+		Iterator<Map.Entry<String, InputStream>> textureIterator = textureExporter.loadTextures();
 		while (textureIterator.hasNext()) {
 			Map.Entry<String, InputStream> tex = textureIterator.next();
 			out.putNextEntry(new ZipEntry("tex/" + tex.getKey()));

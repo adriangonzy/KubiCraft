@@ -9,11 +9,17 @@ public class MapInfo {
 	public Path path;
 	public Dimension dimension;
 	public SelectionBounds bounds;
+	public String texturePath;
 
-	public MapInfo(Path path, Dimension dimension) {
+	public MapInfo(Path path, Dimension dimension, String texturePath) {
 		this.dimension = dimension;
 		this.path = path;
+		this.texturePath = texturePath;
 		this.bounds = new SelectionBounds();
+	}
+
+	public MapInfo(Path path, Dimension dimension) {
+		this(path, dimension, null);
 	}
 
 	public static class SelectionBounds {

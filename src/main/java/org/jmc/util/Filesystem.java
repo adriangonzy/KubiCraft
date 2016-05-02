@@ -28,7 +28,7 @@ public class Filesystem {
 	/**
 	 * Gets the directory that Minecraft keeps its save files in. It works on
 	 * all systems that Minecraft 1.2 works in.
-	 * 
+	 *
 	 * @return path to the Minecraft dir
 	 */
 	public static File getMinecraftDir() {
@@ -161,5 +161,35 @@ public class Filesystem {
 			returnDestFolder = returnDestFolder.getParent();
 		}
 		return returnDestFolder;
+	}
+
+	public static boolean isTextureFolder(File file) {
+		File[] subfiles = file.listFiles();
+		boolean gotAssets 	 = false;
+		boolean gotMcmeta	 = false;
+		boolean gotMinecraft = false;
+
+		if (!file.exists() || !file.isDirectory()) {
+			return false;
+		}
+
+		for (int i = 0; i < subfiles.length; i++) {
+			if (subfiles[i].getName().equals("assets") && !gotAssets) {
+				gotAssets = true;
+				File[] assetsFiles = subfiles[i].listFiles();
+				for (int j = 0; j < assetsFiles.length; j++) {
+					if (assetsFiles[j].getName().equals("minecraft")) {
+						gotMinecraft = true;
+					}
+				}
+			} else if (subfiles[i].getName().equals("pack.mcmeta")) {
+				gotMcmeta = true;
+			}
+
+			if( gotAssets && gotMcmeta && gotMinecraft ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -17,9 +17,14 @@ public class ContentUtil {
                 "exports. \n\n" +
                 "For now, sticking to the 2 Million triangles mark is the best way of having an artefact free export.",
 
-        "Can I use my own texture pack ?",
-        "We do not currently support custom texture packs. We use the vanilla texture pack with 256x256 textures.\n\n" +
-                "However, we are working on custom textures support and hope to release it as soon as possible.",
+        "Can I use my own resource pack ?",
+            "Yes you can ! And if some textures are missing, we replace them with defaults textures.\n" +
+            "However, we only support texture packs with version 1.6 or over.",
+
+        "Why my custom resource pack does not show exactly as in minecraft ? ",
+            "That's because some resource packs require special mods such as Optifine or MCPatcher.\n\n" +
+                    "We cannot use the enhanced textures for this pack. " +
+                    "So we try our best to export the textures anyway. That's why you don't have connected textures, or shaders, yet...",
 
         "Why is my world save not working ?",
         "We currently only support minecraft anvil format.\n\n" +
@@ -45,7 +50,7 @@ public class ContentUtil {
                     "For even more awesomeness, Kubity mobile Apps will let you rediscover your exports in Virtual Reality !!",
 
             "Next Steps",
-            "We are working on including custom textures, bigger exports, better entities support, faster and easier export preview and even more...\n\n" +
+            "We are working on bigger exports, better entities support, faster and easier export preview and even more...\n\n" +
                     "Stay updated for the goodness.",
 
             "Contact",
