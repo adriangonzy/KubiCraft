@@ -247,9 +247,6 @@ public class TextureExporter {
 				IndexColorModel colorModel = (IndexColorModel) src.getColorModel();
 				src = colorModel.convertToIntDiscrete(src.getRaster(), true);
 			}
-			int nbCanal = src.getColorModel().getNumComponents();
-
-			int[] buffer = new int[w * h * nbCanal];
 
 			int nbCanal = src.getColorModel().getNumComponents();
 			int[] buffer = new int[w * h * nbCanal];
