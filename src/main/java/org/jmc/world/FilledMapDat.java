@@ -118,7 +118,7 @@ public class FilledMapDat {
 		  throw new RuntimeException("Unexpected error writing image");
 		}
 
-		File mtlfile = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder, Options.mtlFileName).toFile();
+		File mtlfile = Paths.get(Options.outputDir, Options.exportsFolder, Options.mtlFileName).toFile();
 		
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(mtlfile, true)))) {
 			out.println("");

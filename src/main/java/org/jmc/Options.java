@@ -26,7 +26,15 @@ public class Options
 	/**
 	 * Output directory.
 	 */
-	public static File outputDir = new File(".");
+	public static String outputDir = System.getProperty("user.dir");
+
+	static {
+		// hack for mac bundled .app
+		String userDir = System.getProperty("user.dir");
+		if (userDir != null && userDir.endsWith(".app")) {
+			outputDir = userDir.substring(0, userDir.length() - "kubicraft.app".length());
+		}
+	}
 
 	/**
 	 * How to scale the exported geometry.

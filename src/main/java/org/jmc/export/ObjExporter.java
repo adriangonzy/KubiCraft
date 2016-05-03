@@ -32,13 +32,7 @@ public class ObjExporter {
 
 	public static void export(MapInfo mapInfo, ProgressCallback progress, KubityExporter.ErrorCallback errorCallback) {
 
-		// hack for mac bundled .app
-		String userDir = System.getProperty("user.dir");
-		if (userDir != null && userDir.endsWith(".app")) {
-			Options.outputDir = new File(userDir.substring(0, userDir.length() - "kubicraft.app".length()));
-		}
-
-		Path exportsDir = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder);
+		Path exportsDir = Paths.get(Options.outputDir, Options.exportsFolder);
 		exportsDir.toFile().mkdir();
 		String outName = mapInfo.path.toFile().getName() + ".zip";
 		if (mapInfo.texturePath != null) {

@@ -340,7 +340,7 @@ public class Banner extends BlockModel {
      */
     private void exportBannerMaterial(String materialName, int baseColorIndex) {
 
-        File mtlfile = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder, Options.mtlFileName).toFile();
+        File mtlfile = Paths.get(Options.outputDir, Options.exportsFolder, Options.mtlFileName).toFile();
 
         Color baseColor = getColorById(baseColorIndex);
 

@@ -22,8 +22,7 @@ import static org.jmc.util.Resources.*;
 public class TextureExporter {
 	private final String TEX_FOLDER = "conf/textures/tex";
 	private final int TEXTURE_SIZE = 256;
-	public final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), Options.exportsFolder, "texture-packs").toAbsolutePath()
-			.toString();
+	public final String PATH_TO_CUSTOM_TEXTURE = Paths.get(Options.outputDir, Options.exportsFolder, "texture-packs").toFile().getAbsolutePath();
 
 	private final String texturePath;
 	private final ProgressCallback progress;
