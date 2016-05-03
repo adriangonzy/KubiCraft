@@ -18,10 +18,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -41,10 +40,9 @@ public class ObjExporter {
 
 		Path exportsDir = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder);
 		exportsDir.toFile().mkdir();
-
 		String outName = mapInfo.path.toFile().getName() + ".zip";
 		if (mapInfo.texturePath != null) {
-			String[] segments = mapInfo.texturePath.split("/");
+			String[] segments = mapInfo.texturePath.split(Pattern.quote(File.separator));
 			outName = mapInfo.path.toFile().getName() + "-" + segments[segments.length - 1] + ".zip";
 		}
 
