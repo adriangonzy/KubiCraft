@@ -21,6 +21,8 @@ public class Options
 		CUSTOM
 	}
 
+	public static String exportsFolder = "kubicraft-exports";
+
 	/**
 	 * Output directory.
 	 */

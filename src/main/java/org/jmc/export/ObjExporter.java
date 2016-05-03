@@ -16,6 +16,8 @@ import org.jmc.world.Region;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,12 +34,21 @@ public class ObjExporter {
 	public static void export(MapInfo mapInfo, ProgressCallback progress, KubityExporter.ErrorCallback errorCallback) {
 
 		// hack for mac bundled .app
-		String property = System.getProperty("user.dir");
-		if (property != null && property.endsWith(".app")) {
-			Options.outputDir = new File(property.substring(0, property.length() - "kubicraft.app".length()));
+		String userDir = System.getProperty("user.dir");
+		if (userDir != null && userDir.endsWith(".app")) {
+			Options.outputDir = new File(userDir.substring(0, userDir.length() - "kubicraft.app".length()));
 		}
 
-		File exportFile = new File(Options.outputDir, mapInfo.path.toFile().getName() + ".zip");
+		Path exportsDir = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder);
+		exportsDir.toFile().mkdir();
+
+		String outName = mapInfo.path.toFile().getName() + ".zip";
+		if (mapInfo.texturePath != null) {
+			String[] segments = mapInfo.texturePath.split("/");
+			outName = mapInfo.path.toFile().getName() + "-" + segments[segments.length - 1] + ".zip";
+		}
+
+		File exportFile = new File(exportsDir.toFile().getAbsolutePath(), outName);
 		ZipOutputStream exportOutputStream;
 
 		try {
@@ -92,9 +103,8 @@ public class ObjExporter {
 			progress.setStatus(ProgressCallback.Status.EXPORTING_OBJ);
 		}
 
-		File objfile = new File(Options.outputDir, "export.obj");
 		// Add Obj file to the zip
-		out.putNextEntry(new ZipEntry(objfile.getName()));
+		out.putNextEntry(new ZipEntry("export.obj"));
 
 		if (mapInfo.bounds.maxX - mapInfo.bounds.minX == 0 || mapInfo.bounds.maxY - mapInfo.bounds.minY == 0 || mapInfo.bounds.maxZ - mapInfo.bounds.minZ == 0) {
 			Log.error(Messages.getString("MainPanel.SEL_ERR"), null, true);
@@ -177,7 +187,6 @@ public class ObjExporter {
 		chunk_buffer.removeAllChunks();
 		out.closeEntry();
 
-		Log.info("Saved model to " + objfile.getAbsolutePath());
 		Log.info("Total : " + (System.currentTimeMillis() - startExport) + " ms");
 		Log.info("Number of triangles : " + writeRunner.nbTrianglesCount + " triangles.");
 

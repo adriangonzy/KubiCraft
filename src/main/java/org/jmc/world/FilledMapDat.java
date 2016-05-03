@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
@@ -117,7 +118,7 @@ public class FilledMapDat {
 		  throw new RuntimeException("Unexpected error writing image");
 		}
 
-		File mtlfile = new File(Options.outputDir, Options.mtlFileName);
+		File mtlfile = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder, Options.mtlFileName).toFile();
 		
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(mtlfile, true)))) {
 			out.println("");

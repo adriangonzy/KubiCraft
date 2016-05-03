@@ -1,11 +1,11 @@
 package org.jmc.export;
 
+import org.jmc.Options;
 import org.jmc.util.BlocksMap;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +21,8 @@ import static org.jmc.util.Resources.*;
 public class TextureExporter {
 	private final String TEX_FOLDER = "conf/textures/tex";
 	private final int TEXTURE_SIZE = 256;
-	public  final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), "Kubicraft Textures Pack").toAbsolutePath().toString();
+	public final String PATH_TO_CUSTOM_TEXTURE = Paths.get(System.getProperty("user.dir"), Options.exportsFolder, "texture-packs").toAbsolutePath()
+			.toString();
 
 	private final String texturePath;
 	private final ProgressCallback progress;
@@ -68,9 +69,9 @@ public class TextureExporter {
 		Map<String, String> defaultTextures = loadTextureFromJar();
 		Map<String, String> customTextures = listAllCustomTextures(fullPath.toString());
 
-		File customTexturesRepertory = Paths.get(PATH_TO_CUSTOM_TEXTURE).toFile();
-		customTexturesRepertory.mkdir();
-		String pathToCustomTextures;
+		String[] segments = path.split("/");
+		File customTexturesFolder = Paths.get(PATH_TO_CUSTOM_TEXTURE, segments[segments.length - 1]).toFile();
+		customTexturesFolder.mkdirs();
 		int count = 0;
 
 		/* Compute the default texture block image scale */
@@ -82,9 +83,9 @@ public class TextureExporter {
 
 			/* We need to transform only custom texture */
 			if (customTextures.get(block.mtlName) != null) {
-				pathToCustomTextures = transformTexture(block, customTextures.get(block.mtlName));
 				defaultTextures.remove(name);
-				defaultTextures.put(name, pathToCustomTextures);
+				String outTexPath = Paths.get(customTexturesFolder.getAbsolutePath(), block.fileName).toString();
+				defaultTextures.put(name, transformTexture(block, customTextures.get(block.mtlName), outTexPath));
 			}
 
 			//Update progress bar
@@ -96,34 +97,6 @@ public class TextureExporter {
 		}
 		return defaultTextures;
 	}
-
-	private void computeBlockScale(Map<String, String> textures) {
-		String tmpPath = textures.get("stone.png");
-		if (tmpPath == null) {
-			tmpPath = textures.get("dirt.png");
-		}
-		BufferedImage src;
-		try {
-			src = ImageIO.read(new File(tmpPath));
-			blockScale = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
-			blockScale = TEXTURE_SIZE / blockScale;
-		} catch (IOException e) {
-			System.out.println("Default scale can't be compute");
-			blockScale = 0;
-		}
-	}
-
-	private String transformTexture(BlocksMap.Block block, String path){
-		if (block.isSquare) {
-			path = squareImage(path, block.fileName);
-		}
-		if (!block.tint.equals("")){
-			path = tintImage(path, block.fileName, new Color(Integer.parseInt(block.tint, 16)));
-		}
-		path = resizeImage(block.fileName, path);
-		return path;
-	}
-
 
 	private Map<String, String> loadTextureFromJar() throws IOException {
 		final Map<String, String> textures = new HashMap<>();
@@ -178,18 +151,44 @@ public class TextureExporter {
 		return textures;
 	}
 
-	private String squareImage(String path, String name) {
+	private void computeBlockScale(Map<String, String> textures) {
+		String tmpPath = textures.get("stone.png");
+		if (tmpPath == null) {
+			tmpPath = textures.get("dirt.png");
+		}
+		BufferedImage src;
+		try {
+			src = ImageIO.read(new File(tmpPath));
+			blockScale = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
+			blockScale = TEXTURE_SIZE / blockScale;
+			if (blockScale < 1.0f)
+				blockScale = 1.0f;
+		} catch (IOException e) {
+			System.out.println("Default scale can't be compute");
+			blockScale = 0;
+		}
+	}
+
+	private String transformTexture(BlocksMap.Block block, String srcTexPath, String outTexPath){
+
 		//Entities aren't square !
-		if (path.contains("entity")){
-			return path;
+		if (block.isSquare && !srcTexPath.contains("entity")) {
+			srcTexPath = squareImage(srcTexPath, outTexPath);
+		}
+		if (!block.tint.equals("")){
+			srcTexPath = tintImage(new Color(Integer.parseInt(block.tint, 16)), srcTexPath, outTexPath);
 		}
 
+		return resizeImage(srcTexPath, outTexPath);
+	}
+
+	private String squareImage(String srcPath, String outPath) {
 		try {
-			BufferedImage src = ImageIO.read(new File(path));
+			BufferedImage src = ImageIO.read(new File(srcPath));
 			int size;
 
 			if (src.getHeight() == src.getWidth()) {
-				return path;
+				return srcPath;
 			}else if (src.getWidth() > src.getHeight()){
 				size = src.getHeight();
 			} else {
@@ -198,24 +197,20 @@ public class TextureExporter {
 			BufferedImage resized = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 
 			resized.getGraphics().drawImage(src, 0, 0, null);
-			ImageIO.write(resized, "png", new File(PATH_TO_CUSTOM_TEXTURE, name ));
-			return PATH_TO_CUSTOM_TEXTURE + "/" + name;
+			ImageIO.write(resized, "png", new File(outPath));
+			return outPath;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return path;
+		return srcPath;
 	}
-	private String resizeImage(String name, String path) {
+	private String resizeImage(String srcPath, String outPath) {
 		try {
-			BufferedImage src = ImageIO.read(new File(path));
+			BufferedImage src = ImageIO.read(new File(srcPath));
 
 			int newWidth;
 			int newHeight;
 			int minSize = src.getWidth() > src.getHeight() ? src.getHeight() : src.getWidth();
-
-			if (minSize * blockScale == TEXTURE_SIZE){
-				return path;
-			}
 
 			float scale = blockScale;
 			if (blockScale == 0) {
@@ -232,27 +227,33 @@ public class TextureExporter {
 			g2.drawImage(src, 0, 0, newWidth, newHeight, null);
 			g2.dispose();
 
-			ImageIO.write(resized, "png", new File(PATH_TO_CUSTOM_TEXTURE, name));
-
+			ImageIO.write(resized, "png", new File(outPath));
+			return outPath;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return srcPath;
 		}
-		return PATH_TO_CUSTOM_TEXTURE + "/" + name;
 	}
-	private String tintImage(String path, String name, Color tint) {
+	private String tintImage(Color tint, String srcPath, String outPath) {
 		try {
-			BufferedImage src = ImageIO.read(new File(path));
+			BufferedImage src = ImageIO.read(new File(srcPath));
 
 			int w = src.getWidth();
 			int h = src.getHeight();
-			int c = src.getColorModel().getPixelSize() / 8;
-			int nbCanal = c;
+			int nbCanal = src.getColorModel().getNumComponents();
 
 			int[] buffer = new int[w * h * nbCanal];
+
+			// convert color model to discrete int for later byte operations
+			if (src.getColorModel() instanceof IndexColorModel) {
+				IndexColorModel colorModel = (IndexColorModel) src.getColorModel();
+				src = colorModel.convertToIntDiscrete(src.getRaster(), true);
+			}
 
 			WritableRaster raster = src.getRaster();
 			raster.getPixels(0, 0, w, h, buffer);
 
+			int c;
 			int r = tint.getRed();
 			int g = tint.getGreen();
 			int b = tint.getBlue();
@@ -275,11 +276,15 @@ public class TextureExporter {
 			}
 
 			raster.setPixels(0, 0, w, h, buffer);
-			ImageIO.write(src, "png", new File(PATH_TO_CUSTOM_TEXTURE, name ));
+			ImageIO.write(src, "png", new File(outPath));
 
-			return PATH_TO_CUSTOM_TEXTURE + "/" + name;
+			return outPath;
 		} catch (IOException e) {
-			return path;
+			System.out.println(srcPath);
+			System.out.println(outPath);
+			System.out.println(tint);
+			e.printStackTrace();
+			return srcPath;
 		}
 	}
 }

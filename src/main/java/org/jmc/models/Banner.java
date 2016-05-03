@@ -3,6 +3,7 @@ package org.jmc.models;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 
 import org.jmc.NBT.*;
@@ -339,8 +340,7 @@ public class Banner extends BlockModel {
      */
     private void exportBannerMaterial(String materialName, int baseColorIndex) {
 
-
-        File mtlfile = new File(Options.outputDir, Options.mtlFileName);
+        File mtlfile = Paths.get(Options.outputDir.getAbsolutePath(), Options.exportsFolder, Options.mtlFileName).toFile();
 
         Color baseColor = getColorById(baseColorIndex);
 
