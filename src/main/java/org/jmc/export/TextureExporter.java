@@ -240,15 +240,15 @@ public class TextureExporter {
 
 			int w = src.getWidth();
 			int h = src.getHeight();
-			int nbCanal = src.getColorModel().getNumComponents();
-
-			int[] buffer = new int[w * h * nbCanal];
 
 			// convert color model to discrete int for later byte operations
 			if (src.getColorModel() instanceof IndexColorModel) {
 				IndexColorModel colorModel = (IndexColorModel) src.getColorModel();
 				src = colorModel.convertToIntDiscrete(src.getRaster(), true);
 			}
+
+			int nbCanal = src.getColorModel().getNumComponents();
+			int[] buffer = new int[w * h * nbCanal];
 
 			WritableRaster raster = src.getRaster();
 			raster.getPixels(0, 0, w, h, buffer);
