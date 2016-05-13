@@ -373,7 +373,7 @@ public class BlocksMap {
 		blocks.add(new Block("banner_pattern_tt.png", "triangle_top.png"));
 
 
-		/******** Armor Stand ********/
+		/******** Mobs ********/
 
 		blocks.add(new Block("mob_char.png", "steve.png"));
 		blocks.add(new Block("mob_creeper.png", "creeper.png"));
@@ -385,6 +385,11 @@ public class BlocksMap {
 		blocks.add(new Block("mob_cow.png", "cow.png"));
 		blocks.add(new Block("mob_sheep.png", "sheep.png"));
 		blocks.add(new Block("mob_squid.png", "squid.png"));
+		blocks.add(new Block("mob_rabbit.png", "brown.png"));
+
+
+		/******** Armor Stand ********/
+
 		blocks.add(new Block("armor_stand.png", "wood.png"));
 		blocks.add(new Block("armor_golden_helmet.png", "gold_layer_1.png"));
 		blocks.add(new Block("armor_golden_chest.png", "gold_layer_1.png"));
