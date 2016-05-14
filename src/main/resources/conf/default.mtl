@@ -2395,3 +2395,23 @@ newmtl mob_rabbit
 Kd 0.5 0.5 0.5
 Ks 0.0000 0.0000 0.0000
 map_Kd tex/mob_rabbit.png
+
+newmtl mob_horse
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_horse.png
+
+newmtl mob_wolf
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_wolf.png
+
+newmtl mob_mushroom
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_mushroom.png
+
+newmtl mob_villager
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_villager.png
