@@ -80,8 +80,13 @@ public class ChunkProcessor
 		face.chunk_idx = chunk_idx_count;
 		optimisedFaces.add(face);
 
-		if (addInvertedFace) {
-			optimisedFaces.add(FaceUtils.invertNormals(face));
+		try {
+			if (addInvertedFace) {
+				optimisedFaces.add(FaceUtils.invertNormals(face));
+			}
+		} catch (Exception e) {
+			//TODO: See here why we got an exception
+			System.out.println("Can't add inverted faces for " + mtl +" ...");
 		}
 	}
 
