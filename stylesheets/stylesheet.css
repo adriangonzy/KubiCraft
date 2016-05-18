@@ -6,8 +6,11 @@
   src: url('../assets/Minecraftia-Regular.ttf');
 }
 
+p {
+	text-align: justify;
+}
+
 body {
-  text-align: justify;
   padding: 0;
   margin: 0;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
