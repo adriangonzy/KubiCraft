@@ -35,7 +35,7 @@ public class ObjExporter {
 		Path exportsDir = Paths.get(Options.outputDir, Options.exportsFolder);
 		exportsDir.toFile().mkdir();
 		String outName = mapInfo.path.toFile().getName() + ".zip";
-		if (mapInfo.texturePath != null) {
+		if (mapInfo.texturePath != null && mapInfo.texturePath.length() > 0) {
 			String[] segments = mapInfo.texturePath.split(Pattern.quote(File.separator));
 			outName = mapInfo.path.toFile().getName() + "-" + segments[segments.length - 1] + ".zip";
 		}
