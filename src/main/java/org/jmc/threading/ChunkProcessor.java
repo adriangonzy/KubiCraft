@@ -80,13 +80,12 @@ public class ChunkProcessor
 		face.chunk_idx = chunk_idx_count;
 		optimisedFaces.add(face);
 
-		try {
-			if (addInvertedFace) {
+		if (addInvertedFace) {
+			try {
 				optimisedFaces.add(FaceUtils.invertNormals(face));
+			} catch (Exception e){
+				System.out.println("Can't invert face");
 			}
-		} catch (Exception e) {
-			//TODO: See here why we got an exception
-			System.out.println("Can't add inverted faces for " + mtl +" ...");
 		}
 	}
 
@@ -193,7 +192,6 @@ public class ChunkProcessor
 				continue;
 			}
 			Entity handler=EntityTypes.getEntity(entity);
-			
 			try {
 				if(handler!=null) handler.addEntity(this, entity);
 			}
