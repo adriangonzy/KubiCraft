@@ -2415,3 +2415,8 @@ newmtl mob_villager
 Kd 0.5 0.5 0.5
 Ks 0.0000 0.0000 0.0000
 map_Kd tex/mob_villager.png
+
+newmtl mob_ocelot
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_ocelot.png
