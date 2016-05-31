@@ -373,7 +373,7 @@ public class BlocksMap {
 		blocks.add(new Block("banner_pattern_tt.png", "triangle_top.png"));
 
 
-		/******** Armor Stand ********/
+		/******** Mobs ********/
 
 		blocks.add(new Block("mob_char.png", "steve.png"));
 		blocks.add(new Block("mob_creeper.png", "creeper.png"));
@@ -385,6 +385,18 @@ public class BlocksMap {
 		blocks.add(new Block("mob_cow.png", "cow.png"));
 		blocks.add(new Block("mob_sheep.png", "sheep.png"));
 		blocks.add(new Block("mob_squid.png", "squid.png"));
+		blocks.add(new Block("mob_rabbit.png", "brown.png"));
+		blocks.add(new Block("mob_horse.png", "horse_brown.png"));
+		blocks.add(new Block("mob_mushroom.png", "mooshroom.png"));
+		blocks.add(new Block("mob_wolf.png", "wolf.png"));
+		blocks.add(new Block("mob_ocelot.png", "ocelot.png"));
+		blocks.add(new Block("mob_villager.png", "villager.png"));
+		blocks.add(new Block("mob_irongolem.png", "iron_golem.png"));
+		blocks.add(new Block("mob_snowman.png", "snowman.png"));
+
+
+		/******** Armor Stand ********/
+
 		blocks.add(new Block("armor_stand.png", "wood.png"));
 		blocks.add(new Block("armor_golden_helmet.png", "gold_layer_1.png"));
 		blocks.add(new Block("armor_golden_chest.png", "gold_layer_1.png"));

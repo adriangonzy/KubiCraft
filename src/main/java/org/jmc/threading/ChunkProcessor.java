@@ -81,7 +81,11 @@ public class ChunkProcessor
 		optimisedFaces.add(face);
 
 		if (addInvertedFace) {
-			optimisedFaces.add(FaceUtils.invertNormals(face));
+			try {
+				optimisedFaces.add(FaceUtils.invertNormals(face));
+			} catch (Exception e){
+				System.out.println("Can't invert face");
+			}
 		}
 	}
 
@@ -188,7 +192,6 @@ public class ChunkProcessor
 				continue;
 			}
 			Entity handler=EntityTypes.getEntity(entity);
-			
 			try {
 				if(handler!=null) handler.addEntity(this, entity);
 			}

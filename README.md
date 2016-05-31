@@ -49,11 +49,7 @@ We are currently Beta so there are still many issues to be corrected.
     - more ?
 
 - Missing or Bugged entities:
-    - Rabbit
-    - Horse
-    - Mule
     - Guardian
-    - Mooshroom
     - Shulker
     - tagged mobs
     - beacons

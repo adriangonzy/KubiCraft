@@ -86,6 +86,8 @@ public class TextureExporter {
 				defaultTextures.remove(name);
 				String outTexPath = Paths.get(customTexturesFolder.getAbsolutePath(), block.fileName).toString();
 				defaultTextures.put(name, transformTexture(block, customTextures.get(block.mtlName), outTexPath));
+			} else {
+				System.out.println("Missing texture: " + block.mtlName);
 			}
 
 			//Update progress bar
