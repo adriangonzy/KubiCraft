@@ -164,7 +164,7 @@ public class MainWindow extends JFrame implements KeyListener
 				consoleLog.setVisible(true);
 				Options.debug = true;
 			} else {
-				if (consoleLog == null) {
+				if (consoleLog != null) {
 					consoleLog.setVisible(false);
 				}
 				Options.debug = false;
