@@ -2416,6 +2416,16 @@ Kd 0.5 0.5 0.5
 Ks 0.0000 0.0000 0.0000
 map_Kd tex/mob_villager.png
 
+newmtl mob_irongolem
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_irongolem.png
+
+newmtl mob_snowman
+Kd 0.5 0.5 0.5
+Ks 0.0000 0.0000 0.0000
+map_Kd tex/mob_snowman.png
+
 newmtl mob_ocelot
 Kd 0.5 0.5 0.5
 Ks 0.0000 0.0000 0.0000

@@ -391,6 +391,9 @@ public class BlocksMap {
 		blocks.add(new Block("mob_wolf.png", "wolf.png"));
 		blocks.add(new Block("mob_ocelot.png", "ocelot.png"));
 		blocks.add(new Block("mob_villager.png", "villager.png"));
+		blocks.add(new Block("mob_irongolem.png", "iron_golem.png"));
+		blocks.add(new Block("mob_snowman.png", "snowman.png"));
+
 
 		/******** Armor Stand ********/
 
