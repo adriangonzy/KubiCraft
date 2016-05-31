@@ -79,7 +79,7 @@ public class Options
 	/**
 	 * How many triangle are allowed
 	 */
-	public static final long MAX_ALLOWED_TRIANGLE = 4000000;
+	public static final long MAX_ALLOWED_TRIANGLE = MAX_WARNING_TRIANGLE;
 
 	/**
 	 * Maximum size of a file for export

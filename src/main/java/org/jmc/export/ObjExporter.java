@@ -60,7 +60,7 @@ public class ObjExporter {
 			}
 
 			if (nbTriangle > Options.MAX_ALLOWED_TRIANGLE) {
-				errorCallback.handleError("Your export exceeds the allowed 4 Millions triangles limit (currently " + nbTriangle +
+				errorCallback.handleError("Your export exceeds the allowed 2 Millions triangles limit (currently " + nbTriangle +
 						"). This might change with future releases. Check the FAQ for more info.");
 				deleteFiles(exportFile);
 				return;

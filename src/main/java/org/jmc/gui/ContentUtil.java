@@ -10,7 +10,7 @@ public class ContentUtil {
         "For every export, KubiCraft bundles a zip file named as the used world save. Each export contains one .obj file, one .mtl file and a textures folder.\n\n" +
                 "Each zip can easily be found in a folder called 'kubicraft-exports' next to the KubiCraft application.",
 
-        "Why is there a warning when my export is over 2 Million triangles ?",
+        "Why is there an error when my export is over 2 Million triangles ?",
         "When the exported model has over 2 Million triangles, Kubity format conversion has to remove mesh vertexes in order to optimize the playing " +
                 "experience on the desktop and mobile applications. \n\n" +
                 "This optimization approach is very wide scoped (optimize any 3d mesh) and unfortunately can introduce important artefacts in minecraft " +

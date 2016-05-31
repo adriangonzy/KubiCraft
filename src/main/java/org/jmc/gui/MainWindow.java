@@ -20,6 +20,8 @@ import org.jmc.world.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +29,8 @@ import java.nio.file.Paths;
 /**
  * Main program window.
  */
-public class MainWindow extends JFrame
+public class MainWindow extends JFrame implements KeyListener
+
 {
 	//Might want to up these later to support larger monitors...
 	/**
@@ -55,10 +58,8 @@ public class MainWindow extends JFrame
 	{
 		super("Main Window");
 
-		if (Options.debug) {
-			consoleLog = new GUIConsoleLog();
-			consoleLog.setVisible(true);
-		}
+		this.setFocusable(true);
+		this.addKeyListener(this);
 
 		try {
 			Materials.initialize();
@@ -149,4 +150,26 @@ public class MainWindow extends JFrame
 		}
 		super.paint(g);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if ((e.isMetaDown() || e.isControlDown()) && e.getKeyCode() == KeyEvent.VK_D) {
+			if (!Options.debug) {
+				if (consoleLog == null) {
+					consoleLog = new GUIConsoleLog();
+				}
+				consoleLog.setVisible(true);
+				Options.debug = true;
+			} else {
+				consoleLog.setVisible(false);
+				Options.debug = false;
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 }
