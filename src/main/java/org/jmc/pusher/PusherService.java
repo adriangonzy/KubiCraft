@@ -1,6 +1,7 @@
 package org.jmc.pusher;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pusher.client.Pusher;
 import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
@@ -37,6 +38,7 @@ public class PusherService {
 		pusher.connect(new ConnectionEventListener() {
 			@Override
 			public void onConnectionStateChange(ConnectionStateChange change) {
+				System.out.printf("previous %s : current %s\n", change.getPreviousState(), change.getCurrentState());
 				progress.setStatus(ProgressCallback.Status.PROCESSING);
 			}
 
@@ -53,11 +55,19 @@ public class PusherService {
 		channel.bind(PUSHER_EVENT_PACKER, new SubscriptionEventListener() {
 			@Override
 			public void onEvent(String channel, String event, String data) {
-				Pack pack = new Gson().fromJson(data, Pack.class);
+				System.out.printf("channel %s event %s\n", channel, event);
+
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				Pack pack = gson.fromJson(data, Pack.class);
+
+				System.out.printf("data %s\n", gson.toJson(pack));
+
 				if (pack.status.equals("FINISH")) {
 					progress.setStatus(ProgressCallback.Status.FINISHED);
+					disconnect();
 				} else if (pack.status.equals("FAIL")) {
 					errorCallback.handleError("Processing failed");
+					disconnect();
 				} else {
 					progress.setStatus(ProgressCallback.Status.PROCESSING);
 				}
@@ -100,6 +110,5 @@ public class PusherService {
 	public void start(String channelId) {
 		this.connect();
 		this.subscribe(channelId);
-		this.disconnect();
 	}
 }
