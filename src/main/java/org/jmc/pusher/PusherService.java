@@ -8,6 +8,7 @@ import com.pusher.client.channel.SubscriptionEventListener;
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
+import org.jmc.Options;
 import org.jmc.export.KubityExporter;
 import org.jmc.export.ProgressCallback;
 import org.jmc.util.Log;
@@ -20,13 +21,12 @@ import java.net.URI;
  * Created by Paul on 23/06/2016.
  */
 public class PusherService {
-	private static String PUSHER_KEY = "9c773532930d6ca3974f";
 	private static String PUSHER_EVENT_PACKER = "packer";
 	private static String PUSHER_EVENT_MODEL = "model";
 
 	private final KubityExporter.ErrorCallback errorCallback;
 	private final ProgressCallback progress;
-	private Pusher pusher = new Pusher(PUSHER_KEY);
+	private Pusher pusher = new Pusher(Options.ENVIRONMENT.pusher_key);
 
 	public PusherService(ProgressCallback progress, KubityExporter.ErrorCallback errorCallback) {
 		this.progress = progress;
@@ -78,7 +78,7 @@ public class PusherService {
 			@Override
 			public void onEvent(String channel, String event, String data) {
 				Model model = new Gson().fromJson(data, Model.class);
-				openUrlInBrowser(KubityExporter.ENV + "/p/" + model.id);
+				openUrlInBrowser("http://" + Options.ENVIRONMENT.id + ".qrvr.io/p/" + model.id);
 			}
 		});
 	}

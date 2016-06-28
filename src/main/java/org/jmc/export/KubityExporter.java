@@ -2,7 +2,6 @@ package org.jmc.export;
 
 import com.google.gson.Gson;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
@@ -14,15 +13,12 @@ import org.jmc.pusher.Pack;
 import org.jmc.pusher.PusherService;
 import org.jmc.util.Log;
 import org.jmc.util.ProgressHttpEntityWrapper;
-import org.jmc.world.LevelDat;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -32,8 +28,9 @@ import java.util.ResourceBundle;
  * Created by pitton on 2016-02-17.
  */
 public class KubityExporter {
-	public static String ENV = "https://qrvr.io";
-	public static String PACKER_ENV = "https://packer-prod.qrvr.io:443/api/pack";
+	public static String PACKER_URL = Options.ENVIRONMENT.protocol + "://" +
+										Options.ENVIRONMENT.packer_id + ".qrvr.io:" +
+										Options.ENVIRONMENT.port + "/api/pack";
 
 	public static String VERSION = ResourceBundle.getBundle("version").getString("version");
 
@@ -56,7 +53,7 @@ public class KubityExporter {
 
 	private static Pack upload(Path inputFile, final ProgressCallback progressCallback, ErrorCallback errorCallback) {
 		try (CloseableHttpClient httpClient = createClient()) {
-			String packerURL = PACKER_ENV;
+			String packerURL = PACKER_URL;
 			Log.info("Uploading to " + packerURL);
 			HttpPost post = new HttpPost(packerURL);
 			post.setHeader("user-agent", "kubicraft/" + VERSION);
