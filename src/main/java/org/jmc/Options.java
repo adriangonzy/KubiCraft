@@ -1,7 +1,6 @@
 package org.jmc;
 
-import java.io.File;
-import java.nio.file.Paths;
+import org.jmc.export.Environment;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +12,8 @@ import java.util.Set;
  */
 public class Options
 {
+
+	public static Environment ENVIRONMENT = Environment.PROD;
 
 	public enum OffsetType
 	{
