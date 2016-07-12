@@ -49,6 +49,7 @@ public class KubityExporter {
 		}
 		PusherService pusherService = new PusherService(progress, errorCallback);
 		pusherService.start(pack.channelId);
+		progress.setStatus(ProgressCallback.Status.PROCESSING);
 	}
 
 	private static Pack upload(Path inputFile, final ProgressCallback progressCallback, ErrorCallback errorCallback) {

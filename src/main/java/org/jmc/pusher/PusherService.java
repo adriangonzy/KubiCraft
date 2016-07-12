@@ -9,6 +9,7 @@ import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
 import org.jmc.Options;
+import org.jmc.export.Environment;
 import org.jmc.export.KubityExporter;
 import org.jmc.export.ProgressCallback;
 import org.jmc.util.Log;
@@ -28,18 +29,18 @@ public class PusherService {
 	private final ProgressCallback progress;
 	private Pusher pusher = new Pusher(Options.ENVIRONMENT.pusher_key);
 
+	private Model model;
+
 	public PusherService(ProgressCallback progress, KubityExporter.ErrorCallback errorCallback) {
 		this.progress = progress;
 		this.errorCallback = errorCallback;
 	}
-
 
 	private void connect() {
 		pusher.connect(new ConnectionEventListener() {
 			@Override
 			public void onConnectionStateChange(ConnectionStateChange change) {
 				System.out.printf("previous %s : current %s\n", change.getPreviousState(), change.getCurrentState());
-				progress.setStatus(ProgressCallback.Status.PROCESSING);
 			}
 
 			@Override
@@ -64,6 +65,9 @@ public class PusherService {
 
 				if (pack.status.equals("FINISH")) {
 					progress.setStatus(ProgressCallback.Status.FINISHED);
+					if (model != null) {
+						openUrlInBrowser("https://" + (Options.ENVIRONMENT == Environment.PROD ? "www" : Options.ENVIRONMENT.id) + ".qrvr.io/p/" + model.id);
+					}
 					disconnect();
 				} else if (pack.status.equals("FAIL")) {
 					errorCallback.handleError("Processing failed");
@@ -77,8 +81,7 @@ public class PusherService {
 		channel.bind(PUSHER_EVENT_MODEL, new SubscriptionEventListener() {
 			@Override
 			public void onEvent(String channel, String event, String data) {
-				Model model = new Gson().fromJson(data, Model.class);
-				openUrlInBrowser("http://" + Options.ENVIRONMENT.id + ".qrvr.io/p/" + model.id);
+				model = new Gson().fromJson(data, Model.class);
 			}
 		});
 	}
